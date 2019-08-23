@@ -184,10 +184,10 @@ void                         Engine42::Engine::_RenderAll(void)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-    if (_skybox != nullptr)
-        _skybox->Draw();
     for (auto it = _meshRenderers.begin(); it != _meshRenderers.end(); it++)
          (*it)->Draw();
+    if (_skybox != nullptr)
+        _skybox->Draw();
 	if (_shaderFbo != nullptr)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
