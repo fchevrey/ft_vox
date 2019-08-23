@@ -1,0 +1,41 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+ShaderPixel
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Editor
+.vscode
+
+#temp File
+.DS_Store
+
+# Libs
+sdl2/
+sdl2_image/
+assimp-4.1.0/
+
+# Executables
+*.exe
+*.out
+*.app
+
+.DS_Store
