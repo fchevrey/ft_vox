@@ -4,17 +4,23 @@
 
 Chunk::Chunk(void)
 {
+    glGenVertexArrays(1, &_vao);
+    
     return;
 }
 
 Chunk::~Chunk(void)
 {
-    glDeleteBuffers
+	glDeleteBuffers(1, &_vao);
+    glDeleteBuffers(1, &_vbo);
+    glDeleteBuffers(1, &_ebo);
 }
 
-Chunk &	Chunk::operator=(Chunk const & rhs)
+void Chunk::Draw()
 {
-    return *this;
+    glBindVertexArray(_vao);
+	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 void Chunk::_CreateMeshes()
 {
@@ -40,15 +46,16 @@ void Chunk::_CreateMeshes()
 }
 void Chunk::_CreateCube(int x, int y, int z)
 {
+    const int renderSize = Block::RENDER_SIZE;
     float vert[] = {
-    x-Block::RENDER_SIZE, y-Block::RENDER_SIZE, z+Block::RENDER_SIZE,
-    x+Block::RENDER_SIZE, y-Block::RENDER_SIZE, z+Block::RENDER_SIZE,
-    x+Block::RENDER_SIZE, y+Block::RENDER_SIZE, z+Block::RENDER_SIZE,
-    x-Block::RENDER_SIZE, y+Block::RENDER_SIZE, z+Block::RENDER_SIZE,
-    x+Block::RENDER_SIZE, y-Block::RENDER_SIZE, z-Block::RENDER_SIZE,
-    x-Block::RENDER_SIZE, y-Block::RENDER_SIZE, z-Block::RENDER_SIZE,
-    x-Block::RENDER_SIZE, y+Block::RENDER_SIZE, z-Block::RENDER_SIZE,          
-    x+Block::RENDER_SIZE, y+Block::RENDER_SIZE, z-Block::RENDER_SIZE,
+    static_cast<float>(x - renderSize), static_cast<float>(y - renderSize), static_cast<float>(z + renderSize),
+    static_cast<float>(x + renderSize), static_cast<float>(y - renderSize), static_cast<float>(z + renderSize),
+    static_cast<float>(x + renderSize), static_cast<float>(y + renderSize), static_cast<float>(z + renderSize),
+    static_cast<float>(x - renderSize), static_cast<float>(y + renderSize), static_cast<float>(z + renderSize),
+    static_cast<float>(x + renderSize), static_cast<float>(y - renderSize), static_cast<float>(z - renderSize),
+    static_cast<float>(x - renderSize), static_cast<float>(y - renderSize), static_cast<float>(z - renderSize),
+    static_cast<float>(x - renderSize), static_cast<float>(y + renderSize), static_cast<float>(z - renderSize),          
+    static_cast<float>(x + renderSize), static_cast<float>(y + renderSize), static_cast<float>(z - renderSize)
     };
     unsigned int indices[] ={
         0, 1, 2,
@@ -64,7 +71,6 @@ void Chunk::_CreateCube(int x, int y, int z)
         5, 4, 1,
         5, 1, 0,
     };
-    glGenVertexArrays(1, &_vao);
 	glGenBuffers(1, &_vbo);
 	glGenBuffers(1, &_ebo);
 	glBindVertexArray(_vao);
@@ -77,19 +83,6 @@ void Chunk::_CreateCube(int x, int y, int z)
 	// position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-    //texture attribute
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
-
-
-
-    /* Vector3d p1(x-Block::RENDER_SIZE, y-Block::RENDER_SIZE, z+Block::RENDER_SIZE);
-    Vector3d p2(x+Block::RENDER_SIZE, y-Block::RENDER_SIZE, z+Block::RENDER_SIZE);
-    Vector3d p3(x+Block::RENDER_SIZE, y+Block::RENDER_SIZE, z+Block::RENDER_SIZE);
-    Vector3d p4(x-Block::RENDER_SIZE, y+Block::RENDER_SIZE, z+Block::RENDER_SIZE);
-    Vector3d p5(x+Block::RENDER_SIZE, y-Block::RENDER_SIZE, z-Block::RENDER_SIZE);
-    Vector3d p6(x-Block::RENDER_SIZE, y-Block::RENDER_SIZE, z-Block::RENDER_SIZE);
-    Vector3d p7(x-Block::RENDER_SIZE, y+Block::RENDER_SIZE, z-Block::RENDER_SIZE);          
-    Vector3d p8(x+Block::RENDER_SIZE, y+Block::RENDER_SIZE, z-Block::RENDER_SIZE);*/
 }

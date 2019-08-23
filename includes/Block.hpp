@@ -16,20 +16,24 @@ enum eBlockType
 class Block
 {
 public:
+/*  constructors / destructor */
     Block();
     Block(const Block &rsh);
     ~Block();
-
+/*	variables   */	
     bool IsActive();
     void SetActive(bool active);
+    static const int RENDER_SIZE;
+/*	functions   */	
+
     Block & operator=(const Block &rhs);
 
 
 private:
-/*	private variables*/	
+/*	private variables   */	
     bool _active;
     eBlockType _blockType;
-/*	private functions*/	
+/*	private functions   */	
 };
 
 #endif

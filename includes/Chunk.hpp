@@ -15,7 +15,6 @@ public:
 /*	public functions*/	
     void Update(float dt);
     void Draw();
-	Chunk &		operator=(Chunk const & rhs);
 private:
 /*	private variables*/	
     unsigned int _vao;

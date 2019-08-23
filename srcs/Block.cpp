@@ -1,6 +1,8 @@
 #include "Block.hpp"
 #include <iostream>
 
+const int Block::RENDER_SIZE = 16;
+
 Block::Block(void)
 {
     return;
@@ -20,4 +22,12 @@ Block & Block::operator=(const Block &rhs)
     _active = rhs._active;
     _blockType = rhs._blockType;
     return *this;
+}
+bool Block::IsActive()
+{
+    return _active;
+}
+void Block::SetActive(bool active)
+{
+    _active = active;
 }
