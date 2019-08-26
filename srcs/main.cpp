@@ -14,6 +14,9 @@
 #include "Skybox.hpp"
 #include "PrintGlm.hpp"
 #include "Framebuffer.hpp"
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include "Text.hpp"
 
 std::shared_ptr<Skybox> CreateSkyBox()
 {
@@ -57,9 +60,18 @@ int				main(int ac, char **av)
 		SDL_Quit();
 		return (EXIT_SUCCESS);
 	}
+	FT_Library ft;
+	if (FT_Init_FreeType(&ft))
+	{
+		std::cout << "Failed to init freetype library" << std::endl;
+		SDL_Quit();
+		return 1;
+	}
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 	SdlWindow	win(800, 400, false, true, "ShaderPixel");
 	win.CreateGlContext(4, 1, true, 24);
+	std::shared_ptr<Text>	font(new Text("ressources/fonts/OpenSans-Regular.ttf", ft));
+	Engine42::Engine::ChangeFontUI(font);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

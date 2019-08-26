@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/08/26 13:05:45 by jules            ###   ########.fr        #
+#    Updated: 2019/08/26 14:15:45 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,11 +25,12 @@ SRCS_DIR = srcs
 
 SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp MeshRenderer.cpp Terrain.cpp Transform.cpp Skybox.cpp \
-		PrintGlm.cpp Framebuffer.cpp PostProcess.cpp Block.cpp
+		PrintGlm.cpp Framebuffer.cpp PostProcess.cpp Block.cpp Text.cpp \
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		IGameObject.hpp Engine.hpp Transform.hpp MeshRenderer.hpp Skybox.hpp \
-		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp
+		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp \
+		Text.hpp
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)
@@ -81,7 +82,7 @@ SDL2_LFLAGS = $(shell sh ./lib/sdl2/bin/sdl2-config --libs)
 LFLAGS =	$(GLAD_PATH)/glad.o\
 			-L $(ASSIMP_PATH)/lib -lassimp\
 			$(SDL2_LFLAGS) \
-			-L $(SDL_IMAGE_PATH)/lib -lfreetype
+			-L $(FREETYPE_PATH)/build -lfreetype -lbz2
 
 LDFLAGS = "-Wl,-rpath,lib/assimp-4.1.0/lib"	
 

@@ -12,6 +12,7 @@
 # include "Framebuffer.hpp"
 # include "PostProcess.hpp"
 # include <memory>
+# include "Text.hpp"
 
 namespace Engine42
 {
@@ -30,6 +31,7 @@ namespace Engine42
 			static void            SetWindow(const SdlWindow *win);
 			static void            AddGameObject(std::shared_ptr<Engine42::IGameObject> object);
 			static void            AddGameObject(std::list<std::shared_ptr<Engine42::IGameObject>> objects);
+			static void            ChangeFontUI(std::shared_ptr<Text> font);
 			static void            AddPostProcessShader(std::shared_ptr<Shader> postProcessShader);
 			static void            SetSkybox(std::shared_ptr<Skybox> skybox);
 			static void            Loop(void);
@@ -53,6 +55,7 @@ namespace Engine42
 			std::list<std::shared_ptr<MeshRenderer>>           _meshRenderers;
 			std::list<std::shared_ptr<Framebuffer>>				_framebuffers;
 			std::list<std::shared_ptr<Engine42::IGameObject>>   _gameObjs;
+			std::shared_ptr<Text>					_fontUI;
 			SDL_Event                           _event;
 			const Uint8                         *_keys;
 			const SdlWindow                     *_win;

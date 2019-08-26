@@ -38,6 +38,11 @@ void            Engine42::Engine::AddGameObject(std::shared_ptr<Engine42::IGameO
 	if (object != nullptr)
 		_inst._gameObjs.push_back(object);
 }
+
+void            Engine42::Engine::ChangeFontUI(std::shared_ptr<Text> font)
+{
+	_inst._fontUI = font;
+}
 void Engine42::Engine::SetSkybox(std::shared_ptr<Skybox> skybox)
 {
 	_inst._skybox = skybox;
@@ -112,7 +117,7 @@ void            Engine42::Engine::Loop(void)
 	const float fixedTimeUpdate = 0.02f;
 	float       fixedDelta = 0.02f;
 	float		LastTime = 0.0f;
-	int nbFrame = 0;
+	int			nbFrame = 0;
 
 	while (!quit)
 	{
@@ -188,6 +193,7 @@ void                         Engine42::Engine::_RenderAll(void)
          (*it)->Draw();
     if (_skybox != nullptr)
         _skybox->Draw();
+	_fontUI->RenderText("This is sample text", 250.0f, 250.0f, 1.0f, 1.0f, glm::vec4(0.5, 0.8f, 0.2f, 1.0f)); 
 	if (_shaderFbo != nullptr)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
