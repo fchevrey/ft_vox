@@ -5,7 +5,8 @@
 *.slo
 *.lo
 *.o
-ShaderPixel
+ft_vox
+objs/
 
 # Precompiled Headers
 *.gch
