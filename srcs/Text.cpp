@@ -1,67 +1,98 @@
 #include "Text.hpp"
 #include "vector"
+#include "gtc/matrix_transform.hpp"
+#include "gtc/type_ptr.hpp"
 
 Text::Text(const std::string font, FT_Library lib)
 {
 	if (FT_New_Face(lib, font.c_str(), 0, &_face))
 		throw std::runtime_error(std::string("Could not open font ") + font);
-	FT_Set_Pixel_Sizes(_face, 0, 48);
-	_g = _face->glyph;
+	_proj = glm::ortho(0.0, 800.0, 0.0, 400.0);
+	FT_Set_Pixel_Sizes(_face, 0, 24);
 	std::vector<const char *>	shadersPath{"shaders/Text.vs.glsl", "shaders/Text.fs.glsl"};
 	std::vector<GLenum> type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 	_shader.reset(new Shader(shadersPath, type));
 
-	glActiveTexture(GL_TEXTURE0);
-	glGenTextures(1, &_texture);
-	glBindTexture(GL_TEXTURE_2D, _texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	for (GLubyte c = 0;c < 128; c++)
+	{
+		if (FT_Load_Char(_face, c, FT_LOAD_RENDER))
+		{
+			std::cout << "failed to load character " << c << std::endl;
+			continue;
+		}
+
+		GLuint texture;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, _face->glyph->bitmap.width, _face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, _face->glyph->bitmap.buffer);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		Character character = {
+			texture,
+			glm::ivec2(_face->glyph->bitmap.width, _face->glyph->bitmap.rows),
+			glm::ivec2(_face->glyph->bitmap_left, _face->glyph->bitmap_top),
+			static_cast<GLuint>(_face->glyph->advance.x)
+		};
+
+		_characters.insert(std::pair<GLchar, Character>(c, character));
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glGenBuffers(1, &_vbo);
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)(sizeof(float) * 2));
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
 }
 
 Text::~Text() {}
 
-void	Text::RenderText(const std::string text, float x, float y, float sx, float sy, glm::vec4 color) const
+void	Text::RenderText(const std::string text, float x, float y, float scale, glm::vec4 color)
 {
-	float x2, y2, w, h;
+	glDisable(GL_CULL_FACE);
+	GLfloat x2, y2, w, h;
 	_shader->use();
 	_shader->setVec4("color", color);
 	_shader->setInt("tex", 0);
-	for (auto it = text.begin(); it != text.end(); it++)
+	_shader->setMat4("projection", _proj);
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(_vao);
+	for (std::string::const_iterator it = text.begin(); it != text.end(); it++)
 	{
-		if (FT_Load_Char(_face, *it, FT_LOAD_RENDER))
-			continue;
+		Character ch = _characters[*it];
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, _g->bitmap.width, _g->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE, _g->bitmap.buffer);
-		
-		x2 = x + _g->bitmap_left * sx;
-		y2 = -y + _g->bitmap_top * sy;
-		w = _g->bitmap.width * sx;
-		h = _g->bitmap.rows * sy;
+		x2 = x + ch.Bearing.x * scale;
+		y2 = y - (ch.Size.y - ch.Bearing.y) * scale;
+		w = ch.Size.x * scale;
+		h = ch.Size.y * scale;
 
-		GLfloat infos[] = {
-			x2, -y2, 0, 0,
-			x2 + w, -y2, 1, 0,
-			x2, -y2 - h, 0, 1,
-			x2 + w, -y2 - h , 1, 1
+		GLfloat vertices[6][4] = {
+			{ x2, y2 + h, 0.0, 0.0 },
+			{ x2, y2, 0.0, 1.0 },
+			{ x2 + w, y2, 1.0, 1.0 },
+
+			{ x2, y2 + h, 0.0, 0.0 },
+			{ x2 + w, y2, 1.0, 1.0 },
+			{ x2 + w, y2 + h, 1.0, 0.0 }
 		};
-
+		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(infos), infos, GL_DYNAMIC_DRAW);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		x += (_g->advance.x / 64) * sx;
-		y += (_g->advance.y / 64) * sy;
+		x += (ch.Advance >> 6) * scale;
 	}
-
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glEnable(GL_CULL_FACE);
 }

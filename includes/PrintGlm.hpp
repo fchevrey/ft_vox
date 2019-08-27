@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/27 19:17:06 by jloro             #+#    #+#             */
-/*   Updated: 2019/07/27 19:17:30 by jloro            ###   ########.fr       */
+/*   Updated: 2019/08/27 14:16:03 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,7 @@
 # include "gtc/type_ptr.hpp"
 
 std::ostream &operator<<(std::ostream &o, glm::vec3 & vec);
+std::ostream &operator<<(std::ostream &o, glm::vec4 & vec);
 std::ostream &operator<<(std::ostream &o, glm::mat3 & mat);
+std::ostream &operator<<(std::ostream &o, glm::mat4 & mat);
 #endif

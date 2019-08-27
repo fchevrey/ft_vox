@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/26 13:31:18 by jules             #+#    #+#             */
-/*   Updated: 2019/08/26 15:22:36 by jules            ###   ########.fr       */
+/*   Updated: 2019/08/27 13:04:45 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@
 # include <string>
 # include "Shader.hpp"
 # include "glm.hpp"
+# include <map>
+
+struct Character {
+    GLuint     TextureID;  // ID handle of the glyph texture
+    glm::ivec2 Size;       // Size of glyph
+    glm::ivec2 Bearing;    // Offset from baseline to left/top of glyph
+    GLuint     Advance;    // Offset to advance to next glyph
+};
 
 class Text
 {
@@ -25,14 +33,15 @@ class Text
 		Text(const std::string font, FT_Library lib);
 		virtual ~Text();
 
-		void	RenderText(const std::string text, float x, float y, float sx, float sy, glm::vec4 color) const;
+		void	RenderText(const std::string text, float x, float y, float scale, glm::vec4 color);
 
 	private:
 		FT_Face			_face;
-		FT_GlyphSlot	_g;
 		std::shared_ptr<Shader>	_shader;
 		GLuint			_vbo;
-		GLuint			_texture;
+		GLuint			_vao;
+		std::map<GLchar, Character> _characters;
+		glm::mat4		_proj;
 };
 
 #endif

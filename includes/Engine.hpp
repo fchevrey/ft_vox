@@ -31,12 +31,14 @@ namespace Engine42
 			static void            SetWindow(const SdlWindow *win);
 			static void            AddGameObject(std::shared_ptr<Engine42::IGameObject> object);
 			static void            AddGameObject(std::list<std::shared_ptr<Engine42::IGameObject>> objects);
+			static void            AddUIElement(std::shared_ptr<Engine42::IGameObject> object);
 			static void            ChangeFontUI(std::shared_ptr<Text> font);
 			static void            AddPostProcessShader(std::shared_ptr<Shader> postProcessShader);
 			static void            SetSkybox(std::shared_ptr<Skybox> skybox);
 			static void            Loop(void);
 			static const SDL_Event &GetEvent();
 			static const Uint8     *GetKeyInput();
+			static std::shared_ptr<Text> GetFontUI();
 			static bool             Destroy(std::shared_ptr<MeshRenderer> meshRenderer);
 			static void             ReloadShaders(void);
 
@@ -55,6 +57,7 @@ namespace Engine42
 			std::list<std::shared_ptr<MeshRenderer>>           _meshRenderers;
 			std::list<std::shared_ptr<Framebuffer>>				_framebuffers;
 			std::list<std::shared_ptr<Engine42::IGameObject>>   _gameObjs;
+			std::list<std::shared_ptr<Engine42::IGameObject>>   _UI;
 			std::shared_ptr<Text>					_fontUI;
 			SDL_Event                           _event;
 			const Uint8                         *_keys;
