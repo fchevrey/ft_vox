@@ -1,6 +1,8 @@
 #include "Block.hpp"
 #include <iostream>
 
+const int Block::RENDER_SIZE = 16;
+
 Block::Block(void)
 {
     return;

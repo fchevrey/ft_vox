@@ -3,18 +3,19 @@
 
 # include <iostream>
 # include "Block.hpp"
+# include "Renderer.hpp"
 
-class Chunk 
+class Chunk : public Renderer
 {
 public: 
 /*	constructors / Destructor*/	
-    Chunk(void); 
+    Chunk(); 
+    Chunk(std::shared_ptr<Shader> shader, Transform transform); 
     ~Chunk(void); 
 /*	public variables*/	
     static const int CHUNK_SIZE = 16;
 /*	public functions*/	
-    void Update(float dt);
-    void Draw();
+    virtual void Draw() const;
 	Chunk &		operator=(Chunk const & rhs);
 private:
 /*	private variables*/	
