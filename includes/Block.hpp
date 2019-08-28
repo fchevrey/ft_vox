@@ -17,10 +17,13 @@ class Block
 {
 public:
     Block();
+    Block(bool active);
     Block(const Block &rsh);
-    ~Block();
+    virtual ~Block();
 
-    bool IsActive();
+	static const int BLOCK_SIZE = 1;
+
+    bool IsActive() const;
     void SetActive(bool active);
     Block & operator=(const Block &rhs);
 

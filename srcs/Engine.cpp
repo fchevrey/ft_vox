@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-
+#include "Chunk.hpp"
 
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
@@ -119,6 +119,7 @@ void            Engine42::Engine::Loop(void)
 	float       lastTime = delta;
 	const float fixedTimeUpdate = 0.02f;
 	float       fixedDelta = 0.02f;
+	Chunk		chunk;
 
 	while (!quit)
 	{
@@ -130,6 +131,7 @@ void            Engine42::Engine::Loop(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);  
+		chunk.Draw();
 		delta = (((float)SDL_GetTicks()) / 1000) - lastTime;
 		Time::SetDeltaTime(delta);
 		_inst._event.type = SDL_USEREVENT;

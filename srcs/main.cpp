@@ -18,6 +18,7 @@
 #include FT_FREETYPE_H
 #include "Text.hpp"
 #include "FpsDisplay.hpp"
+#include "Chunk.hpp"
 std::shared_ptr<Skybox> CreateSkyBox()
 {
 	std::vector<std::string>	texturesPath{
@@ -36,7 +37,6 @@ std::shared_ptr<Skybox> CreateSkyBox()
 
 bool InitModels(SdlWindow &win)
 {
-
 	std::vector<const char *>	shadersPath{"shaders/Vertex.vs.glsl", "shaders/Assimp.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 	std::shared_ptr<Camera> cam(new Camera(win.GetWidth(), win.GetHeight()));
@@ -70,7 +70,7 @@ int				main(int ac, char **av)
 		return 1;
 	}
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-	SdlWindow	win(800, 400, false, true, "ShaderPixel");
+	SdlWindow	win(800, 400, false, true, "Ft_Vox");
 	win.CreateGlContext(4, 1, true, 24);
 	glEnable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
