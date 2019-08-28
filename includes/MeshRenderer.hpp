@@ -4,10 +4,10 @@
 # include <iostream>
 # include "Camera.hpp"
 # include "Time.hpp"
-# include "ARenderer.hpp"
+# include "Renderer.hpp"
 # include <memory>
 
-class MeshRenderer : public ARenderer
+class MeshRenderer : public Renderer
 {
 public: 
 /*	constructors / destrucors	*/
@@ -19,9 +19,6 @@ public:
 /*	public variables	*/
     Transform           transform;
 /*	public functions	*/
-    virtual glm::mat4       GetModelMatrix(void) const;
-    virtual void            SetModelMatrix(glm::mat4 matrix);
-    virtual void            UpdateMatrix(void);
     void                    Destroy(void);
 	MeshRenderer &		    operator=(const MeshRenderer & rhs);
     virtual void        Draw() const;

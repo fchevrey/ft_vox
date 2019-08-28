@@ -9,14 +9,14 @@
 #include "Engine.hpp"
 
 
-MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool useNoise) : ARenderer(shader), _model(model), _noise(useNoise)
+MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool useNoise) : Renderer(shader), _model(model), _noise(useNoise)
 {
     transform = {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
     UpdateMatrix();
 	if (useNoise)
 		InitNoiseText();
 }
-MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, const Transform &trans, bool useNoise) : ARenderer(shader, trans), _model(model), _noise(useNoise)
+MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, const Transform &trans, bool useNoise) : Renderer(shader, trans), _model(model), _noise(useNoise)
 {
     UpdateMatrix();
 	if (useNoise)
@@ -50,10 +50,10 @@ void        MeshRenderer::Draw(void) const
 	_model->Draw(_shader);
 }
 
-glm::mat4       MeshRenderer::GetModelMatrix(void) const {return _modelMatrix;}
-void            MeshRenderer::SetModelMatrix(glm::mat4 matrix) {_modelMatrix = matrix;}
+//glm::mat4       MeshRenderer::GetModelMatrix(void) const {return _modelMatrix;}
+//void            MeshRenderer::SetModelMatrix(glm::mat4 matrix) {_modelMatrix = matrix;}
 
-void            MeshRenderer::UpdateMatrix(void) 
+/*void            MeshRenderer::UpdateMatrix(void) 
 {
     _modelMatrix = glm::mat4(1.0f);
     _modelMatrix = glm::translate(_modelMatrix, transform.position);
@@ -61,8 +61,8 @@ void            MeshRenderer::UpdateMatrix(void)
     _modelMatrix = glm::rotate(_modelMatrix, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     _modelMatrix = glm::rotate(_modelMatrix, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     _modelMatrix = glm::scale(_modelMatrix, transform.scale);
-}
-MeshRenderer::MeshRenderer(MeshRenderer const & src) : ARenderer(src._shader, src.transform)
+}*/
+MeshRenderer::MeshRenderer(MeshRenderer const & src) : Renderer(src._shader, src.transform)
 {
 	_model = src._model;
 }
