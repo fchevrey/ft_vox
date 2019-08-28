@@ -29,7 +29,7 @@ SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		IGameObject.hpp Engine.hpp Transform.hpp MeshRenderer.hpp Skybox.hpp \
-		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp
+		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp ARenderer.hpp
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)

@@ -20,14 +20,14 @@ Engine42::Engine::~Engine(void){
 }
 
 void            Engine42::Engine::SetWindow(const SdlWindow *win) {_inst._win = win;}
-void            Engine42::Engine::AddMeshRenderer(std::list<std::shared_ptr<MeshRenderer>> meshRenderers)
+void            Engine42::Engine::AddRenderer(std::list<std::shared_ptr<ARenderer>> renderers)
 {
-	_inst._meshRenderers.insert(_inst._meshRenderers.end(), meshRenderers.begin(), meshRenderers.end());
+	_inst._renderers.insert(_inst._renderers.end(), renderers.begin(), renderers.end());
 }
-void            Engine42::Engine::AddMeshRenderer(std::shared_ptr<MeshRenderer> meshRenderers) 
+void            Engine42::Engine::AddRenderer(std::shared_ptr<ARenderer> renderers) 
 {
-	if (meshRenderers != nullptr)
-		_inst._meshRenderers.push_back(meshRenderers);
+	if (renderers != nullptr)
+		_inst._renderers.push_back(renderers);
 }
 
 void            Engine42::Engine::AddFramebuffer(std::shared_ptr<Framebuffer> fbo) 
@@ -35,7 +35,7 @@ void            Engine42::Engine::AddFramebuffer(std::shared_ptr<Framebuffer> fb
 	if (fbo != nullptr)
 	{
 		_inst._framebuffers.push_back(fbo);
-		_inst._meshRenderers.push_back(fbo);
+		_inst._renderers.push_back(fbo);
 	}
 }
 
@@ -157,14 +157,14 @@ void            Engine42::Engine::Loop(void)
 	}
 }
 
-bool      Engine42::Engine::Destroy(std::shared_ptr<MeshRenderer> meshRenderer)
+bool      Engine42::Engine::Destroy(std::shared_ptr<ARenderer> renderer)
 {
-    if (meshRenderer == nullptr)
+    if (renderer == nullptr)
         return false;
-    _inst._meshRenderers.remove(meshRenderer);
+    _inst._renderers.remove(renderer);
     return true;
 }
-bool		_sort(const std::shared_ptr<MeshRenderer> first, const std::shared_ptr<MeshRenderer> sec)
+bool		_sort(const std::shared_ptr<ARenderer> first, const std::shared_ptr<ARenderer> sec)
 {
 	float d1 = glm::distance(first->transform.position, Camera::instance->GetPos());
 	float d2 = glm::distance(sec->transform.position, Camera::instance->GetPos());
@@ -181,7 +181,7 @@ void                         Engine42::Engine::_RenderAll(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);  
-	_meshRenderers.sort(_sort);
+	_renderers.sort(_sort);
     for (auto it = _framebuffers.begin(); it != _framebuffers.end(); it++)
          (*it)->genTexture();
 	if (_shaderFbo != nullptr)
@@ -190,7 +190,7 @@ void                         Engine42::Engine::_RenderAll(void)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
-    for (auto it = _meshRenderers.begin(); it != _meshRenderers.end(); it++)
+    for (auto it = _renderers.begin(); it != _renderers.end(); it++)
          (*it)->Draw();
     if (_skybox != nullptr)
         _skybox->Draw();
@@ -221,7 +221,7 @@ void                          Engine42::Engine::_UpdateAll(void)
 }
 void                       Engine42::Engine::ReloadShaders(void)
 {
-    std::for_each(_inst._meshRenderers.begin(), _inst._meshRenderers.end(), [] (std::shared_ptr<MeshRenderer> x) -> void { 
+    std::for_each(_inst._renderers.begin(), _inst._renderers.end(), [] (std::shared_ptr<ARenderer> x) -> void { 
         std::shared_ptr<Shader> shader = x->GetShader(); 
         if (shader)
             shader->Reload();

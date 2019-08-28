@@ -2,13 +2,12 @@
 # define MESHRENDERER_HPP
 
 # include <iostream>
-# include "Model.hpp"
 # include "Camera.hpp"
-# include "Transform.hpp"
 # include "Time.hpp"
+# include "ARenderer.hpp"
 # include <memory>
 
-class MeshRenderer 
+class MeshRenderer : public ARenderer
 {
 public: 
 /*	constructors / destrucors	*/
@@ -23,15 +22,12 @@ public:
     virtual glm::mat4       GetModelMatrix(void) const;
     virtual void            SetModelMatrix(glm::mat4 matrix);
     virtual void            UpdateMatrix(void);
-    std::shared_ptr<Shader> GetShader(void) const;
     void                    Destroy(void);
-    void                    SetShader(std::shared_ptr<Shader>  shader);
 	MeshRenderer &		    operator=(const MeshRenderer & rhs);
     virtual void        Draw() const;
 protected:
     std::shared_ptr<Model>     _model;
-    std::shared_ptr<Shader>    _shader;
-    glm::mat4                  _modelMatrix;
+
 private:
 /*	private variables	*/
 	bool				_noise;
