@@ -4,31 +4,46 @@
 #include "glad.h"
 #include <vector>
 #include "Camera.hpp"
-
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
+#include "stdlib.h"
 Chunk::Chunk()
 {
 	std::vector<const char *>	shadersPath{"shaders/Vertex.vs.glsl", "shaders/Chunk.fs.glsl"};
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 	_shader = new Shader(shadersPath, type);
+
+	for(int i = 0; i < CHUNK_SIZE; i++)
+	{
+		for(int j = 0; j < CHUNK_SIZE; j++)
+		{
+			for(int k = 0; k < CHUNK_SIZE; k++)
+			{
+				_blocks[i][j][k] = new Block;
+			}
+		}
+	}
 	CreateMesh();
 }
 
 Chunk::~Chunk()
 {
+	glDeleteBuffers(1, &_ebo);
+	glDeleteBuffers(1, &_vbo);
+	glDeleteBuffers(1, &_vao);
 	delete _shader;
 }
 
 void	Chunk::CreateMesh()
 {
-	for (int x = 0; x < CHUNK_SIZE; x++)
+	for (int x = 0; x < 3; x++)
 	{
-		for (int y = 0; y < CHUNK_SIZE; y++)
+		for (int y = 0; y < 3; y++)
 		{
-			for (int z = 0; z < CHUNK_SIZE; z++)
+			for (int z = 0; z < 3; z++)
 			{
-				_CreateCube(x, y, z);
+				if (_blocks[x][y][z].IsActive())
+					_CreateCube(x, y, z);
 			}
 		}
 	}
@@ -37,15 +52,16 @@ void	Chunk::CreateMesh()
 #include <iostream>
 void	Chunk::_CreateCube(float x, float y, float z)
 {
+	float halfBlock = Block::BLOCK_SIZE / 2.0f;
 	std::vector<float> vertices = {
-		x-Block::BLOCK_SIZE, y-Block::BLOCK_SIZE, z+Block::BLOCK_SIZE,
-		x+Block::BLOCK_SIZE, y-Block::BLOCK_SIZE, z+Block::BLOCK_SIZE,
-		x-Block::BLOCK_SIZE, y+Block::BLOCK_SIZE, z+Block::BLOCK_SIZE,
-		x+Block::BLOCK_SIZE, y+Block::BLOCK_SIZE, z+Block::BLOCK_SIZE,
-		x-Block::BLOCK_SIZE, y+Block::BLOCK_SIZE, z-Block::BLOCK_SIZE,
-		x+Block::BLOCK_SIZE, y+Block::BLOCK_SIZE, z-Block::BLOCK_SIZE,
-		x-Block::BLOCK_SIZE, y-Block::BLOCK_SIZE, z-Block::BLOCK_SIZE,
-		x+Block::BLOCK_SIZE, y-Block::BLOCK_SIZE, z-Block::BLOCK_SIZE
+		x-halfBlock, y-halfBlock, z+halfBlock,
+		x+halfBlock, y-halfBlock, z+halfBlock,
+		x-halfBlock, y+halfBlock, z+halfBlock,
+		x+halfBlock, y+halfBlock, z+halfBlock,
+		x-halfBlock, y+halfBlock, z-halfBlock,
+		x+halfBlock, y+halfBlock, z-halfBlock,
+		x-halfBlock, y-halfBlock, z-halfBlock,
+		x+halfBlock, y-halfBlock, z-halfBlock
 	};
 
 	std::vector<unsigned int> indices = {
@@ -91,10 +107,10 @@ void	Chunk::_SendToOpenGL()
 void	Chunk::Draw() const
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    _shader->use();
-    _shader->setMat4("view", Camera::instance->GetMatView());
-    _shader->setMat4("projection", Camera::instance->GetMatProj());
-    _shader->setMat4("model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, 0)));
+	_shader->use();
+	_shader->setMat4("view", Camera::instance->GetMatView());
+	_shader->setMat4("projection", Camera::instance->GetMatProj());
+	_shader->setMat4("model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)));
 
 	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);

@@ -6,16 +6,17 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/28 11:30:12 by jules             #+#    #+#             */
-/*   Updated: 2019/08/28 12:44:08 by jules            ###   ########.fr       */
+/*   Updated: 2019/08/29 12:05:04 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHUNK_HPP
 # define CHUNK_HPP
 
-# include "list"
 # include "Shader.hpp"
 # include <vector>
+# include "Block.hpp"
+
 class Chunk
 {
 	public:
@@ -32,6 +33,7 @@ class Chunk
 		void	_CreateCube(float x, float y, float z);
 		void	_SendToOpenGL();
 
+		Block	_blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
 		std::vector<float>	_vertices;
 		std::vector<unsigned int>	_indices;
 		unsigned int	_vao;
