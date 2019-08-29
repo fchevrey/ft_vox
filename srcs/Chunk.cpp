@@ -2,13 +2,13 @@
 #include <iostream>
 # include "glad.h"
 
-Chunk::Chunk(void)
+Chunk::Chunk(void) : Renderer()
 {
     glGenVertexArrays(1, &_vao);
     
     return;
 }
-Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : ARenderer(shader, transform)
+Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform)
 {
     return;
 }
@@ -19,12 +19,12 @@ Chunk::~Chunk(void)
     glDeleteBuffers(1, &_ebo);
 }
 
-void Chunk::Draw()
+/* void Chunk::Draw() const
 {
     glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-}
+}*/
 void Chunk::_CreateMeshes()
 {
     //m_pRenderer->_CreateMesh(&m_meshID, OGLMeshType_Colour);
@@ -49,14 +49,18 @@ void Chunk::_CreateMeshes()
 }
 void	Chunk::Draw() const
 {
+    if (_shader == nullptr)
+    {
+        std::cout << "CHunk cannot be drawed without shader"<< std::endl;
+    }
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     _shader->use();
     _shader->setMat4("view", Camera::instance->GetMatView());
     _shader->setMat4("projection", Camera::instance->GetMatProj());
-    //_shader->setMat4("model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, 0)));
+    _shader->setMat4("model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, 0)));
 
 	glBindVertexArray(_vao);
-	glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 12/*_indices.size()*/, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
