@@ -36,11 +36,11 @@ Chunk::~Chunk()
 
 void	Chunk::CreateMesh()
 {
-	for (int x = 0; x < 3; x++)
+	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
-		for (int y = 0; y < 3; y++)
+		for (int y = 0; y < CHUNK_SIZE; y++)
 		{
-			for (int z = 0; z < 3; z++)
+			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
 				if (_blocks[x][y][z].IsActive())
 					_CreateCube(x, y, z);
