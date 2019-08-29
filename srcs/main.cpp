@@ -51,8 +51,6 @@ bool InitModels(SdlWindow &win)
 	Engine42::Engine::SetSkybox(sky);
 	shadersPath[1] = "shaders/Chunk.fs.glsl";
 	std::shared_ptr<Shader> 	greenShader(new Shader(shadersPath, type));
-	std::shared_ptr<Renderer> chunk(new Chunk(greenShader, Transform(glm::vec3(0,-1.0,0))));
-	Engine42::Engine::AddRenderer(chunk);
 
 	return true;
 }
