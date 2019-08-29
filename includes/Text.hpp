@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/26 13:31:18 by jules             #+#    #+#             */
-/*   Updated: 2019/08/27 13:04:45 by jules            ###   ########.fr       */
+/*   Updated: 2019/08/29 14:48:28 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include FT_FREETYPE_H
 # include <string>
 # include "Shader.hpp"
+# include <memory>
 # include "glm.hpp"
 # include <map>
 

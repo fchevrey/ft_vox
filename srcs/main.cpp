@@ -49,6 +49,11 @@ bool InitModels(SdlWindow &win)
 	Engine42::Engine::AddUIElement(fps);
 	std::shared_ptr<Skybox> sky = CreateSkyBox();
 	Engine42::Engine::SetSkybox(sky);
+	shadersPath[1] = "shaders/Chunk.fs.glsl";
+	std::shared_ptr<Shader> 	greenShader(new Shader(shadersPath, type));
+	std::shared_ptr<Renderer> chunk(new Chunk(greenShader, Transform(glm::vec3(0,-1.0,0))));
+	Engine42::Engine::AddRenderer(chunk);
+
 	return true;
 }
 int				main(int ac, char **av)
@@ -63,7 +68,7 @@ int				main(int ac, char **av)
 		return (EXIT_SUCCESS);
 	}
 	FT_Library ft;
-	if (FT_Init_FreeType(&ft))
+	 if (FT_Init_FreeType(&ft))
 	{
 		std::cout << "Failed to init freetype library" << std::endl;
 		SDL_Quit();
@@ -88,6 +93,7 @@ int				main(int ac, char **av)
 		SDL_Quit();
 		return 0;
 	}
+	std::cout << "here" << std::endl;
 	Engine42::Engine::Loop();
 	SDL_Quit();
 }

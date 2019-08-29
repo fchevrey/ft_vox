@@ -3,7 +3,7 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 
-Text::Text(const std::string font, FT_Library lib)
+ Text::Text(const std::string font, FT_Library lib)
 {
 	if (FT_New_Face(lib, font.c_str(), 0, &_face))
 		throw std::runtime_error(std::string("Could not open font ") + font);

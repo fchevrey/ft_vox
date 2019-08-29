@@ -2,6 +2,7 @@
 #include <iostream>
 
 Block::Block(void) : _active(true) {}
+const int Block::RENDER_SIZE = 16;
 
 Block::Block(bool active) : _active(active) {}
 
