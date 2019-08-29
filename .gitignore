@@ -6,6 +6,7 @@
 *.lo
 *.o
 ft_vox
+objs/
 
 # Precompiled Headers
 *.gch
@@ -30,6 +31,7 @@ ft_vox
 
 # Libs
 sdl2/
+freetype-2.10.0/
 sdl2_image/
 assimp-4.1.0/
 
