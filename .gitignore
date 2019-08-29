@@ -35,6 +35,7 @@ freetype-2.10.0/
 sdl2_image/
 assimp-4.1.0/
 freetype-2.10.0/
+FastNoise/
 
 # Executables
 *.exe
