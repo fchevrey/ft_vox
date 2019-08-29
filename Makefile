@@ -25,12 +25,11 @@ SRCS_DIR = srcs
 
 SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp MeshRenderer.cpp Terrain.cpp Transform.cpp Skybox.cpp \
-		PrintGlm.cpp Framebuffer.cpp PostProcess.cpp Block.cpp Chunk.cpp
+		PrintGlm.cpp Framebuffer.cpp PostProcess.cpp Block.cpp Renderer.cpp
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		IGameObject.hpp Engine.hpp Transform.hpp MeshRenderer.hpp Skybox.hpp \
-		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp \
-		Chunk.hpp
+		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp Renderer.hpp
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)

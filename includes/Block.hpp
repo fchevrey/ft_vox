@@ -27,6 +27,7 @@ public:
 /*	functions   */	
 
     Block & operator=(const Block &rhs);
+    static const int RENDER_SIZE;
 
 
 private:

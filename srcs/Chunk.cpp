@@ -8,10 +8,13 @@ Chunk::Chunk(void)
     
     return;
 }
-
+Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : ARenderer(shader, transform)
+{
+    return;
+}
 Chunk::~Chunk(void)
 {
-	glDeleteBuffers(1, &_vao);
+    glDeleteBuffers(1, &_vao);
     glDeleteBuffers(1, &_vbo);
     glDeleteBuffers(1, &_ebo);
 }
@@ -43,6 +46,19 @@ void Chunk::_CreateMeshes()
         }
     }
     //m_pRenderer->FinishMesh(m_meshID, -1, m_pChunkManager->GetMaterialID());
+}
+void	Chunk::Draw() const
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    _shader->use();
+    _shader->setMat4("view", Camera::instance->GetMatView());
+    _shader->setMat4("projection", Camera::instance->GetMatProj());
+    //_shader->setMat4("model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, 0)));
+
+	glBindVertexArray(_vao);
+	glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 void Chunk::_CreateCube(int x, int y, int z)
 {
