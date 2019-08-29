@@ -1,10 +1,8 @@
 #include "Engine.hpp"
-#include <iostream>
 #include <algorithm>
 #include <vector>
 #include <map>
-#include "PrintGlm.hpp"
-
+#include "Chunk.hpp"
 
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
@@ -43,6 +41,16 @@ void            Engine42::Engine::AddGameObject(std::shared_ptr<Engine42::IGameO
 {
 	if (object != nullptr)
 		_inst._gameObjs.push_back(object);
+}
+
+void            Engine42::Engine::AddUIElement(std::shared_ptr<Engine42::IGameObject> object)
+{
+	if (object != nullptr)
+		_inst._UI.push_back(object);
+}
+void            Engine42::Engine::ChangeFontUI(std::shared_ptr<Text> font)
+{
+	_inst._fontUI = font;
 }
 void Engine42::Engine::SetSkybox(std::shared_ptr<Skybox> skybox)
 {
@@ -117,11 +125,19 @@ void            Engine42::Engine::Loop(void)
 	float       lastTime = delta;
 	const float fixedTimeUpdate = 0.02f;
 	float       fixedDelta = 0.02f;
-	float		LastTime = 0.0f;
-	int nbFrame = 0;
+	Chunk		chunk;
 
 	while (!quit)
 	{
+		if (_inst._shaderFbo != nullptr)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, _inst._fbo);
+		}
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);  
+		chunk.Draw();
 		delta = (((float)SDL_GetTicks()) / 1000) - lastTime;
 		Time::SetDeltaTime(delta);
 		_inst._event.type = SDL_USEREVENT;
@@ -145,15 +161,7 @@ void            Engine42::Engine::Loop(void)
 			_inst._FixedUpdateAll();
 			fixedDelta = 0.0f;
 		}
-		if ((((float)SDL_GetTicks()) / 1000) - LastTime >= 1.0f)
-		{
-			std::cout << "\r                     ";//clean line
-			std::cout << "\rFPS: "<< nbFrame << std::flush;
-			nbFrame = 0;
-			LastTime += 1.0f;
-		}
 		_inst._RenderAll();
-		nbFrame++;
 	}
 }
 
@@ -170,6 +178,8 @@ bool		_sort(const std::shared_ptr<Renderer> first, const std::shared_ptr<Rendere
 	float d2 = glm::distance(sec->transform.position, Camera::instance->GetPos());
 	return d2 < d1;
 }
+
+std::shared_ptr<Text>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
 
 void                         Engine42::Engine::_RenderAll(void)
 {
@@ -194,6 +204,8 @@ void                         Engine42::Engine::_RenderAll(void)
          (*it)->Draw();
     if (_skybox != nullptr)
         _skybox->Draw();
+    for (auto it = _UI.begin(); it != _UI.end(); it++)
+         (*it)->Update();
 	if (_shaderFbo != nullptr)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

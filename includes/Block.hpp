@@ -18,10 +18,13 @@ class Block
 public:
 /*  constructors / destructor */
     Block();
+    Block(bool active);
     Block(const Block &rsh);
-    ~Block();
-/*	variables   */	
-    bool IsActive();
+    virtual ~Block();
+
+	static const int BLOCK_SIZE = 1;
+
+    bool IsActive() const;
     void SetActive(bool active);
     static const int RENDER_SIZE;
 /*	functions   */	

@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/08/22 15:27:02 by jloro            ###   ########.fr        #
+#    Updated: 2019/08/28 11:51:20 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,13 +25,13 @@ SRCS_DIR = srcs
 
 SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp MeshRenderer.cpp Terrain.cpp Transform.cpp Skybox.cpp \
-		PrintGlm.cpp Framebuffer.cpp PostProcess.cpp Block.cpp Renderer.cpp \
-		Chunk.cpp
+		PrintGlm.cpp Framebuffer.cpp PostProcess.cpp Block.cpp Text.cpp \
+		FpsDisplay.cpp Chunk.cpp
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		IGameObject.hpp Engine.hpp Transform.hpp MeshRenderer.hpp Skybox.hpp \
 		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp \
-		Renderer.hpp Chunk.hpp
+		Text.hpp FpsDisplay.hpp Chunk.hpp
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)
@@ -46,6 +46,7 @@ LIB_DIR = ./lib
 SDL_VER = 2.0.9
 SDL_IMAGE_VER = 2.0.4
 ASSIMP_VER = 4.1.0
+FREETYPE_VER = 2.10.0
 
 MAIN_DIR_PATH = $(shell pwd)
 SDL_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2)
@@ -53,6 +54,7 @@ SDL_IMAGE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2_image)
 GLAD_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glad)
 GLM_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glm)
 ASSIMP_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/assimp-$(ASSIMP_VER))
+FREETYPE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/freetype-$(FREETYPE_VER))
 #IRRXML_PATH = $(addprefix $(ASSIMP_PATH), /build/contrib/irrXML)
 
 HEADER_DIR = includes/
@@ -66,7 +68,7 @@ LIB_INCS =	-I $(GLM_PATH)/ \
 			$(SDL2_INC) \
 			-I $(ASSIMP_PATH)/include/ \
 			-I $(GLAD_PATH)/includes/ \
-			-I $(SDL2_IMAGE)/include 
+			-I $(FREETYPE_PATH)/include
 
 
 HEADERS = $(addprefix $(HEADER_DIR), $(HEADER))
@@ -81,7 +83,7 @@ SDL2_LFLAGS = $(shell sh ./lib/sdl2/bin/sdl2-config --libs)
 LFLAGS =	$(GLAD_PATH)/glad.o\
 			-L $(ASSIMP_PATH)/lib -lassimp\
 			$(SDL2_LFLAGS) \
-			#-L $(SDL_IMAGE_PATH)/lib -lSDL2_image
+			-L $(FREETYPE_PATH)/build -lfreetype -lbz2
 
 LDFLAGS = "-Wl,-rpath,lib/assimp-4.1.0/lib"	
 
@@ -98,7 +100,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: ASSIMP SDL2 print_name GLAD $(NAME) print_end
+all: ASSIMP SDL2 FREETYPE print_name GLAD $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -154,6 +156,25 @@ sanitize:
 
 GLAD:
 	make -C $(GLAD_PATH)
+
+FREETYPE:	
+	@if [ ! -d "./lib/freetype-$(FREETYPE_VER)" ]; then \
+		echo "\033$(PINK)m⚠\tFreetype is not installed ! ...\033[0m"; \
+		echo "\033$(CYAN)m➼\tCompiling Freetype-$(FREETYPE_VER) ...\033[0m"; \
+		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
+		cd lib &&\
+		curl -OL https://mirrors.up.pt/pub/nongnu/freetype/freetype-2.10.0.tar.bz2 && \
+		tar -zxvf freetype-$(FREETYPE_VER).tar.bz2 && \
+		rm freetype-$(FREETYPE_VER).tar.bz2 && \
+		mkdir -p $(FREETYPE_PATH) && \
+		cd freetype-$(FREETYPE_VER) && \
+			cmake -B build && \
+			cd build && make && \
+		cd ../.. && \
+		echo "\033$(GREEN)m✓\tfreetype-$(FREETYPE_VER) installed !\033[0m"; \
+	else \
+		echo "\033$(GREEN)m✓\tfreetype-$(FREETYPE_VER) already installed\033[0m"; \
+	fi
 
 ASSIMP:	
 	@if [ ! -d "./lib/assimp-$(ASSIMP_VER)" ]; then \

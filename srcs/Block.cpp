@@ -1,12 +1,10 @@
 #include "Block.hpp"
 #include <iostream>
 
+Block::Block(void) : _active(true) {}
 const int Block::RENDER_SIZE = 16;
 
-Block::Block(void)
-{
-    return;
-}
+Block::Block(bool active) : _active(active) {}
 
 Block::Block(Block const & src) 
 {
@@ -23,11 +21,7 @@ Block & Block::operator=(const Block &rhs)
     _blockType = rhs._blockType;
     return *this;
 }
-bool Block::IsActive()
-{
-    return _active;
-}
-void Block::SetActive(bool active)
-{
-    _active = active;
-}
+
+bool Block::IsActive() const { return _active; }
+
+void Block::SetActive(bool active) { _active = active; }
