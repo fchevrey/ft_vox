@@ -4,6 +4,7 @@
 # include <iostream>
 # include "Block.hpp"
 # include "Renderer.hpp"
+# include <vector>
 
 class Chunk : public Renderer
 {
@@ -11,7 +12,7 @@ public:
 /*	constructors / Destructor*/	
     Chunk(); 
     Chunk(std::shared_ptr<Shader> shader, Transform transform); 
-    ~Chunk(void); 
+    virtual ~Chunk(void); 
 /*	public variables*/	
     static const int CHUNK_SIZE = 16;
 /*	public functions*/	
@@ -22,10 +23,13 @@ private:
     unsigned int _vao;
     unsigned int _vbo;
     unsigned int _ebo;
+    std::vector<float>	_vertices;
+	std::vector<unsigned int>	_indices;
     Block _blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];// The blocks data
-    void _CreateMeshes();
-    void _CreateCube(int x, int y, int z);
 /*	private functions*/	
+    void _CreateMesh();
+    void _CreateCube(float x, float y, float z);
+    void _SendToOpenGL();
 };
 
 #endif

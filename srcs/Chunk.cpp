@@ -1,9 +1,21 @@
 #include "Chunk.hpp"
-#include "Block.hpp"
 #include <algorithm>
-#include "glad.h"
-#include <vector>
+//#include "glad.h"
+//#include <iostream>
+//#include "stdlib.h"
 
+Chunk::Chunk(void) : Renderer()
+{
+    glGenVertexArrays(1, &_vao);
+    
+    return;
+}
+    
+Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform)
+{
+    _CreateMesh();
+    return;
+}
 Chunk::~Chunk()
 {
 	glDeleteBuffers(1, &_ebo);
@@ -11,7 +23,7 @@ Chunk::~Chunk()
 	glDeleteBuffers(1, &_vao);
 }
 
-void	Chunk::CreateMesh()
+void	Chunk::_CreateMesh()
 {
 	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
@@ -26,7 +38,6 @@ void	Chunk::CreateMesh()
 	}
 	_SendToOpenGL();
 }
-#include <iostream>
 void	Chunk::_CreateCube(float x, float y, float z)
 {
 	float halfBlock = Block::BLOCK_SIZE / 2.0f;
@@ -87,23 +98,10 @@ void	Chunk::Draw() const
 	_shader->use();
 	_shader->setMat4("view", Camera::instance->GetMatView());
 	_shader->setMat4("projection", Camera::instance->GetMatProj());
-	_shader->setMat4("model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 5, 0)));
+	_shader->setMat4("model", _modelMatrix);
 
 	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-}
-
-#include "stdlib.h"
-Chunk::Chunk(void) : Renderer()
-{
-    glGenVertexArrays(1, &_vao);
-    
-    return;
-}
-    
-Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform)
-{
-    return;
 }

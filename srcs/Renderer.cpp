@@ -2,7 +2,11 @@
 
 Renderer::Renderer() : _shader(nullptr) {}
 Renderer::Renderer(std::shared_ptr<Shader>  shader) :_shader(shader) {}
-Renderer::Renderer(std::shared_ptr<Shader>  shader, Transform trans) : _shader(shader) {transform = trans;}
+Renderer::Renderer(std::shared_ptr<Shader>  shader, Transform trans) : _shader(shader) 
+{
+    transform = trans;
+    UpdateMatrix();
+}
 
 void    Renderer::UpdateMatrix()
 {

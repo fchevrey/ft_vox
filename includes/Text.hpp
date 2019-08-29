@@ -13,11 +13,12 @@
 #ifndef TEXT_HPP
 # define TEXT_HPP
 
-# include <ft2build.h>
-# include FT_FREETYPE_H
+//# include <ft2build.h>
+//# include FT_FREETYPE_H
 # include <string>
 # include "Shader.hpp"
-# include "glm.hpp"
+# include <memory>
+//# include "glm.hpp"
 # include <map>
 
 struct Character {
@@ -30,13 +31,14 @@ struct Character {
 class Text
 {
 	public:
-		Text(const std::string font, FT_Library lib);
+		Text();
+		//Text(const std::string font, FT_Library lib);
 		virtual ~Text();
 
 		void	RenderText(const std::string text, float x, float y, float scale, glm::vec4 color);
 
 	private:
-		FT_Face			_face;
+		//FT_Face			_face;
 		std::shared_ptr<Shader>	_shader;
 		GLuint			_vbo;
 		GLuint			_vao;

@@ -3,7 +3,8 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 
-Text::Text(const std::string font, FT_Library lib)
+Text::Text(){}
+/* Text::Text(const std::string font, FT_Library lib)
 {
 	if (FT_New_Face(lib, font.c_str(), 0, &_face))
 		throw std::runtime_error(std::string("Could not open font ") + font);
@@ -53,7 +54,7 @@ Text::Text(const std::string font, FT_Library lib)
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-}
+}*/
 
 Text::~Text() {}
 
