@@ -13,16 +13,6 @@ Chunk::Chunk()
 	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
 	_shader = new Shader(shadersPath, type);
 
-	for(int i = 0; i < CHUNK_SIZE; i++)
-	{
-		for(int j = 0; j < CHUNK_SIZE; j++)
-		{
-			for(int k = 0; k < CHUNK_SIZE; k++)
-			{
-				_blocks[i][j][k] = new Block;
-			}
-		}
-	}
 	CreateMesh();
 }
 
