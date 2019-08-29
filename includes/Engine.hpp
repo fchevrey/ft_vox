@@ -8,7 +8,7 @@
 # include "SdlWindow.hpp"
 # include "Time.hpp"
 # include "Skybox.hpp"
-# include "MeshRenderer.hpp"
+# include "Renderer.hpp"
 # include "Framebuffer.hpp"
 # include "PostProcess.hpp"
 # include <memory>
@@ -25,8 +25,8 @@ namespace Engine42
 
 			/*	public variables	*/
 			/*	public functions	*/
-			static void            AddMeshRenderer(std::list<std::shared_ptr<MeshRenderer>> meshrenderer);
-			static void            AddMeshRenderer(std::shared_ptr<MeshRenderer> meshrenderer);
+			static void            AddRenderer(std::list<std::shared_ptr<Renderer>> renderer);
+			static void            AddRenderer(std::shared_ptr<Renderer> meshrenderer);
 			static void            AddFramebuffer(std::shared_ptr<Framebuffer>  fbo);
 			static void            SetWindow(const SdlWindow *win);
 			static void            AddGameObject(std::shared_ptr<Engine42::IGameObject> object);
@@ -38,8 +38,8 @@ namespace Engine42
 			static void            Loop(void);
 			static const SDL_Event &GetEvent();
 			static const Uint8     *GetKeyInput();
+			static bool             Destroy(std::shared_ptr<Renderer> renderer);
 			static std::shared_ptr<Text> GetFontUI();
-			static bool             Destroy(std::shared_ptr<MeshRenderer> meshRenderer);
 			static void             ReloadShaders(void);
 
 			static void	createFBO();
@@ -47,14 +47,14 @@ namespace Engine42
 			unsigned int _fbo;
 			unsigned int _colorBuffer;
 			unsigned int _rbo;
-			unsigned int quadVAO;
-			unsigned int quadVBO;
+			unsigned int _quadVao;
+			unsigned int _quadVbo;
 			std::shared_ptr<Shader>	_shaderFbo;
 			/*  private constructor*/
 			Engine(void); 
 			/*	private variables	*/
 			static Engine                       _inst;
-			std::list<std::shared_ptr<MeshRenderer>>           _meshRenderers;
+			std::list<std::shared_ptr<Renderer>>           _renderers;
 			std::list<std::shared_ptr<Framebuffer>>				_framebuffers;
 			std::list<std::shared_ptr<Engine42::IGameObject>>   _gameObjs;
 			std::list<std::shared_ptr<Engine42::IGameObject>>   _UI;

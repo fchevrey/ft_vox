@@ -9,16 +9,15 @@
 #include "Engine.hpp"
 
 
-MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool useNoise) : _model(model), _shader(shader), _noise(useNoise)
+MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, bool useNoise) : Renderer(shader), _model(model), _noise(useNoise)
 {
     transform = {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
     UpdateMatrix();
 	if (useNoise)
 		InitNoiseText();
 }
-MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, const Transform &trans, bool useNoise) : _model(model), _shader(shader), _noise(useNoise)
+MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<Shader>  shader, const Transform &trans, bool useNoise) : Renderer(shader, trans), _model(model), _noise(useNoise)
 {
-    transform = trans;
     UpdateMatrix();
 	if (useNoise)
 		InitNoiseText();
@@ -51,10 +50,10 @@ void        MeshRenderer::Draw(void) const
 	_model->Draw(_shader);
 }
 
-glm::mat4       MeshRenderer::GetModelMatrix(void) const {return _modelMatrix;}
-void            MeshRenderer::SetModelMatrix(glm::mat4 matrix) {_modelMatrix = matrix;}
+//glm::mat4       MeshRenderer::GetModelMatrix(void) const {return _modelMatrix;}
+//void            MeshRenderer::SetModelMatrix(glm::mat4 matrix) {_modelMatrix = matrix;}
 
-void            MeshRenderer::UpdateMatrix(void) 
+/*void            MeshRenderer::UpdateMatrix(void) 
 {
     _modelMatrix = glm::mat4(1.0f);
     _modelMatrix = glm::translate(_modelMatrix, transform.position);
@@ -62,9 +61,11 @@ void            MeshRenderer::UpdateMatrix(void)
     _modelMatrix = glm::rotate(_modelMatrix, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     _modelMatrix = glm::rotate(_modelMatrix, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     _modelMatrix = glm::scale(_modelMatrix, transform.scale);
+}*/
+MeshRenderer::MeshRenderer(MeshRenderer const & src) : Renderer(src._shader, src.transform)
+{
+	_model = src._model;
 }
-MeshRenderer::MeshRenderer(MeshRenderer const & src) : _model(src._model), _shader(src._shader)
-{}
 
 MeshRenderer::~MeshRenderer(void) {}
 
@@ -136,7 +137,7 @@ void MeshRenderer::Destroy(void)
 {
 	Engine42::Engine::Destroy(std::shared_ptr<MeshRenderer>(this));
 }
-void MeshRenderer::SetShader(std::shared_ptr<Shader>  shader)
+/*void MeshRenderer::SetShader(std::shared_ptr<Shader>  shader)
 {
 	_shader = shader;
 }
@@ -144,4 +145,4 @@ void MeshRenderer::SetShader(std::shared_ptr<Shader>  shader)
 std::shared_ptr<Shader> MeshRenderer::GetShader(void) const
 {
 	return _shader;
-}
+}*/

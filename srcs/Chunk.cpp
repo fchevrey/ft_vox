@@ -1,40 +1,29 @@
 #include "Chunk.hpp"
-#include "Block.hpp"
 #include <algorithm>
-#include "glad.h"
-#include <vector>
-#include "Camera.hpp"
-#include "gtc/matrix_transform.hpp"
-#include "gtc/type_ptr.hpp"
-#include "stdlib.h"
-Chunk::Chunk()
+//#include "glad.h"
+//#include <iostream>
+//#include "stdlib.h"
+
+Chunk::Chunk(void) : Renderer()
 {
-	std::vector<const char *>	shadersPath{"shaders/Vertex.vs.glsl", "shaders/Chunk.fs.glsl"};
-	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
-	_shader = new Shader(shadersPath, type);
-
-	for(int i = 0; i < CHUNK_SIZE; i++)
-	{
-		for(int j = 0; j < CHUNK_SIZE; j++)
-		{
-			for(int k = 0; k < CHUNK_SIZE; k++)
-			{
-				_blocks[i][j][k] = new Block;
-			}
-		}
-	}
-	CreateMesh();
+    glGenVertexArrays(1, &_vao);
+    
+    return;
 }
-
+    
+Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform)
+{
+    _CreateMesh();
+    return;
+}
 Chunk::~Chunk()
 {
 	glDeleteBuffers(1, &_ebo);
 	glDeleteBuffers(1, &_vbo);
 	glDeleteBuffers(1, &_vao);
-	delete _shader;
 }
 
-void	Chunk::CreateMesh()
+void	Chunk::_CreateMesh()
 {
 	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
@@ -49,7 +38,6 @@ void	Chunk::CreateMesh()
 	}
 	_SendToOpenGL();
 }
-#include <iostream>
 void	Chunk::_CreateCube(float x, float y, float z)
 {
 	float halfBlock = Block::BLOCK_SIZE / 2.0f;
@@ -110,7 +98,7 @@ void	Chunk::Draw() const
 	_shader->use();
 	_shader->setMat4("view", Camera::instance->GetMatView());
 	_shader->setMat4("projection", Camera::instance->GetMatProj());
-	_shader->setMat4("model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)));
+	_shader->setMat4("model", _modelMatrix);
 
 	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
