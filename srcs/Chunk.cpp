@@ -26,10 +26,7 @@ void	Chunk::SetUpChunk()
 			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
 				if (y + transform.position.y > 8)
-				{
-				std::cout << y + transform.position.y << std::endl;
 					_blocks[x][y][z].SetActive(false);
-				}
 			}
 		}
 	}

@@ -14,7 +14,7 @@ public:
     Chunk(std::shared_ptr<Shader> shader, Transform transform); 
     virtual ~Chunk(void); 
 /*	public variables*/	
-    static const int CHUNK_SIZE = 16;
+    static const int CHUNK_SIZE = 32;
 /*	public functions*/	
     virtual void Draw() const;
     void CreateMesh();

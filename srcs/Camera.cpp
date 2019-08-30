@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/07/29 12:07:39 by jloro            ###   ########.fr       */
+/*   Updated: 2019/08/30 14:23:03 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	Camera::_CalcMatrix()
 	_right = glm::normalize(glm::cross(_dir, glm::vec3(0.0f, 1.0f, 0.0f)));
 	_up = glm::normalize(glm::cross(_right, _dir));
 	_view = glm::lookAt(_pos, _pos + _dir, _up);
-	_projection = glm::perspective(glm::radians(FOV), _width / _height, 0.1f, 100.0f);
+	_projection = glm::perspective(glm::radians(FOV), _width / _height, 0.1f, 200.0f);
 }
 
 void	Camera::LookAround(float xoffset, float yoffset)
