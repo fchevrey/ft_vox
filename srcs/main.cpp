@@ -1,4 +1,5 @@
 
+#include "ChunkManager.hpp"
 #include "SdlWindow.hpp"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
@@ -10,15 +11,13 @@
 #include "Camera.hpp"
 #include "Model.hpp"
 #include "Engine.hpp"
-#include "Terrain.hpp"
 #include "Skybox.hpp"
 #include "PrintGlm.hpp"
-#include "Framebuffer.hpp"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "Text.hpp"
 #include "FpsDisplay.hpp"
-#include "ChunkManager.hpp"
+
 std::shared_ptr<Skybox> CreateSkyBox()
 {
 	std::vector<std::string>	texturesPath{
@@ -93,7 +92,6 @@ int				main(int ac, char **av)
 		SDL_Quit();
 		return 0;
 	}
-	std::cout << "here" << std::endl;
 	Engine42::Engine::Loop();
 	SDL_Quit();
 }

@@ -110,45 +110,21 @@ void	Chunk::_CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool 
 	};
 
 	std::vector<unsigned int> indices;
-	std::vector<unsigned int> front = {
-		0, 1, 2,
-		2, 1, 3
-	};
-	std::vector<unsigned int> top = {
-		2, 3, 4,
-		4, 3, 5
-	};
-	std::vector<unsigned int> back = {
-		4, 5, 6,
-		6, 5, 7
-	};
-	std::vector<unsigned int> bottom = {
-		6, 7, 0,
-		0, 7, 1
-	};
-	std::vector<unsigned int> right = {
-		1, 7, 3,
-		3, 7, 5
-	};
-	std::vector<unsigned int> left = {
-		6, 0, 4,
-		4, 0, 2
-	};
 
 	if (!lZNegative)
-		indices.insert(indices.end(), back.begin(), back.end());
+		indices.insert(indices.end(), Block::back.begin(), Block::back.end());
 	if (!lZPositive)
-		indices.insert(indices.end(), front.begin(), front.end());
+		indices.insert(indices.end(), Block::front.begin(), Block::front.end());
 
 	if (!lXNegative)
-		indices.insert(indices.end(), left.begin(), left.end());
+		indices.insert(indices.end(), Block::left.begin(), Block::left.end());
 	if (!lXPositive)
-		indices.insert(indices.end(), right.begin(), right.end());
+		indices.insert(indices.end(), Block::right.begin(), Block::right.end());
 
 	if (!lYNegative)
-		indices.insert(indices.end(), bottom.begin(), bottom.end());
+		indices.insert(indices.end(), Block::bottom.begin(), Block::bottom.end());
 	if (!lYPositive)
-		indices.insert(indices.end(), top.begin(), top.end());
+		indices.insert(indices.end(), Block::top.begin(), Block::top.end());
 
 	for (unsigned int& n : indices)
 		n += static_cast<unsigned int>(_vertices.size()) / 3.0f;

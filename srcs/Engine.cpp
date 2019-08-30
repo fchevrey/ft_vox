@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-#include "ChunkManager.hpp"
 
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
