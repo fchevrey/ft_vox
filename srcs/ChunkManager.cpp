@@ -36,17 +36,17 @@ void ChunkManager::Update()
 		bool changes = false;
 		if (dif.z < 0 || dif.z > Chunk::CHUNK_SIZE)
 		{
-			(*it)->transform.position.z += dif.z > 0 ? 1 : -1;
+			(*it)->transform.position.z += dif.z > 0 ? Chunk::CHUNK_SIZE : -Chunk::CHUNK_SIZE;
 			changes = true;
 		}
 		if (dif.y < 0 || dif.y > Chunk::CHUNK_SIZE)
 		{
-			(*it)->transform.position.y += dif.y > 0 ? 1 : -1;
+			(*it)->transform.position.y += dif.y > 0 ? Chunk::CHUNK_SIZE : -Chunk::CHUNK_SIZE;
 			changes = true;
 		}
 		if (dif.x < 0 || dif.x > Chunk::CHUNK_SIZE)
 		{
-			(*it)->transform.position.x += dif.x > 0 ? 1 : -1;
+			(*it)->transform.position.x += dif.x > 0 ? Chunk::CHUNK_SIZE : -Chunk::CHUNK_SIZE;
 			changes = true;
 		}
 		if (changes)
