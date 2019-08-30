@@ -18,7 +18,7 @@
 #include FT_FREETYPE_H
 #include "Text.hpp"
 #include "FpsDisplay.hpp"
-#include "Chunk.hpp"
+#include "ChunkManager.hpp"
 std::shared_ptr<Skybox> CreateSkyBox()
 {
 	std::vector<std::string>	texturesPath{
@@ -51,6 +51,8 @@ bool InitModels(SdlWindow &win)
 	Engine42::Engine::SetSkybox(sky);
 	shadersPath[1] = "shaders/Chunk.fs.glsl";
 	std::shared_ptr<Shader> 	greenShader(new Shader(shadersPath, type));
+	std::shared_ptr<ChunkManager> test(new ChunkManager(greenShader));
+	Engine42::Engine::AddGameObject(test);
 
 	return true;
 }

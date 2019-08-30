@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 15:21:31 by jules             #+#    #+#             */
-/*   Updated: 2019/08/29 16:35:15 by jules            ###   ########.fr       */
+/*   Updated: 2019/08/30 12:24:37 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,19 @@
 
 # include <list>
 # include "Chunk.hpp"
+# include "IGameObject.hpp"
 
-class ChunkManager
+class ChunkManager : public Engine42::IGameObject
 {
 	public:
 		ChunkManager(std::shared_ptr<Shader> shader); 
 		virtual	~ChunkManager();
 
+		virtual void	Update(void);
+		virtual void	FixedUpdate(void);
+
 		void Draw();
-		const int	RENDER_SIZE = 10;
+		const int	RENDER_SIZE = 6;
 	private:
 		std::list<std::shared_ptr<Chunk>>	_chunkList;
 };

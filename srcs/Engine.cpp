@@ -125,13 +125,7 @@ void            Engine42::Engine::Loop(void)
 	float       lastTime = delta;
 	const float fixedTimeUpdate = 0.02f;
 	float       fixedDelta = 0.02f;
-	ChunkManager*	manager;
 
-	std::vector<const char *>	shadersPath{"shaders/Vertex.vs.glsl", "shaders/Chunk.fs.glsl"};
-	std::vector<GLenum>			type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
-	
-	std::shared_ptr<Shader> test(new Shader(shadersPath, type));
-	manager = new ChunkManager(test);
 	while (!quit)
 	{
 		if (_inst._shaderFbo != nullptr)
@@ -142,7 +136,6 @@ void            Engine42::Engine::Loop(void)
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);  
-		manager->Draw();
 		delta = (((float)SDL_GetTicks()) / 1000) - lastTime;
 		Time::SetDeltaTime(delta);
 		_inst._event.type = SDL_USEREVENT;

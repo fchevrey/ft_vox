@@ -13,17 +13,11 @@ Chunk::Chunk(void) : Renderer()
     
 Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform)
 {
-    _CreateMesh();
+	SetUpChunk();
+    CreateMesh();
     return;
 }
-Chunk::~Chunk()
-{
-	glDeleteBuffers(1, &_ebo);
-	glDeleteBuffers(1, &_vbo);
-	glDeleteBuffers(1, &_vao);
-}
-
-void	Chunk::_CreateMesh()
+void	Chunk::SetUpChunk()
 {
 	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
@@ -31,14 +25,80 @@ void	Chunk::_CreateMesh()
 		{
 			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
-				if (_blocks[x][y][z].IsActive())
-					_CreateCube(x, y, z);
+				if (y + transform.position.y > 8)
+				{
+				std::cout << y + transform.position.y << std::endl;
+					_blocks[x][y][z].SetActive(false);
+				}
+			}
+		}
+	}
+}
+
+void	Chunk::Unload()
+{
+	glDeleteBuffers(1, &_ebo);
+	glDeleteBuffers(1, &_vbo);
+	glDeleteBuffers(1, &_vao);
+	_vertices.clear();
+	_indices.clear();
+	for (int x = 0; x < CHUNK_SIZE; x++)
+	{
+		for (int y = 0; y < CHUNK_SIZE; y++)
+		{
+			for (int z = 0; z < CHUNK_SIZE; z++)
+				_blocks[x][y][z].SetActive(true);
+		}
+	}
+}
+Chunk::~Chunk()
+{
+	Unload();
+}
+
+void	Chunk::CreateMesh()
+{
+	bool lDefault = false;
+	for (int x = 0; x < CHUNK_SIZE; x++)
+	{
+		for (int y = 0; y < CHUNK_SIZE; y++)
+		{
+			for (int z = 0; z < CHUNK_SIZE; z++)
+			{
+				if (!_blocks[x][y][z].IsActive())
+					continue;
+
+				bool lXNegative = lDefault;
+				if (x > 0)
+					lXNegative = _blocks[x - 1][y][z].IsActive();
+
+				bool lXPositive = lDefault;
+				if (x < CHUNK_SIZE - 1)
+					lXPositive = _blocks[x + 1][y][z].IsActive();
+
+				bool lYNegative = lDefault;
+				if (y > 0)
+					lYNegative = _blocks[x][y - 1][z].IsActive();
+
+				bool lYPositive = lDefault;
+				if (y < CHUNK_SIZE - 1)
+					lYPositive = _blocks[x][y + 1][z].IsActive();
+
+				bool lZNegative = lDefault;
+				if (z > 0)
+					lZNegative = _blocks[x][y][z - 1].IsActive();
+
+				bool lZPositive = lDefault;
+				if (z < CHUNK_SIZE - 1)
+					lZPositive = _blocks[x][y][z + 1].IsActive();
+
+				_CreateCube(lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive, x, y, z);
 			}
 		}
 	}
 	_SendToOpenGL();
 }
-void	Chunk::_CreateCube(float x, float y, float z)
+void	Chunk::_CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool lYPositive, bool lZNegative, bool lZPositive, float x, float y, float z)
 {
 	float halfBlock = Block::BLOCK_SIZE / 2.0f;
 	std::vector<float> vertices = {
@@ -52,20 +112,46 @@ void	Chunk::_CreateCube(float x, float y, float z)
 		x+halfBlock, y-halfBlock, z-halfBlock
 	};
 
-	std::vector<unsigned int> indices = {
+	std::vector<unsigned int> indices;
+	std::vector<unsigned int> front = {
 		0, 1, 2,
-		2, 1, 3,
+		2, 1, 3
+	};
+	std::vector<unsigned int> top = {
 		2, 3, 4,
-		4, 3, 5,
+		4, 3, 5
+	};
+	std::vector<unsigned int> back = {
 		4, 5, 6,
-		6, 5, 7,
+		6, 5, 7
+	};
+	std::vector<unsigned int> bottom = {
 		6, 7, 0,
-		0, 7, 1,
+		0, 7, 1
+	};
+	std::vector<unsigned int> right = {
 		1, 7, 3,
-		3, 7, 5,
+		3, 7, 5
+	};
+	std::vector<unsigned int> left = {
 		6, 0, 4,
 		4, 0, 2
 	};
+
+	if (!lZNegative)
+		indices.insert(indices.end(), back.begin(), back.end());
+	if (!lZPositive)
+		indices.insert(indices.end(), front.begin(), front.end());
+
+	if (!lXNegative)
+		indices.insert(indices.end(), left.begin(), left.end());
+	if (!lXPositive)
+		indices.insert(indices.end(), right.begin(), right.end());
+
+	if (!lYNegative)
+		indices.insert(indices.end(), bottom.begin(), bottom.end());
+	if (!lYPositive)
+		indices.insert(indices.end(), top.begin(), top.end());
 
 	for (unsigned int& n : indices)
 		n += static_cast<unsigned int>(_vertices.size()) / 3.0f;

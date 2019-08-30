@@ -17,6 +17,9 @@ public:
     static const int CHUNK_SIZE = 16;
 /*	public functions*/	
     virtual void Draw() const;
+    void CreateMesh();
+	void Unload();
+	void SetUpChunk();
 	Chunk &		operator=(Chunk const & rhs);
 private:
 /*	private variables*/	
@@ -27,8 +30,8 @@ private:
 	std::vector<unsigned int>	_indices;
     Block _blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];// The blocks data
 /*	private functions*/	
-    void _CreateMesh();
-    void _CreateCube(float x, float y, float z);
+	void _CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool lYPositive, bool lZNegative, bool lZPositive, float x, float y, float z);
+    //void _CreateCube(float x, float y, float z);
     void _SendToOpenGL();
 };
 
