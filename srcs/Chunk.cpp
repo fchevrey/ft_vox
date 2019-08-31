@@ -11,7 +11,7 @@ Chunk::Chunk(void) : Renderer()
     return;
 }
     
-Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform)
+Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform), _isLoad(false), _hasMesh(false), _isSetUp(false)
 {
 	SetUpChunk();
     CreateMesh();
@@ -30,6 +30,7 @@ void	Chunk::SetUpChunk()
 			}
 		}
 	}
+	_isSetUp = true;
 }
 
 void	Chunk::Unload()
@@ -47,11 +48,20 @@ void	Chunk::Unload()
 				_blocks[x][y][z].SetActive(true);
 		}
 	}
+	_isLoad = false;
+	_hasMesh = false;
+	_isSetUp = false;
 }
 Chunk::~Chunk()
 {
 	Unload();
 }
+
+bool	Chunk::IsLoad() const { return _isLoad; }
+
+bool	Chunk::HasMesh() const { return _hasMesh; }
+
+bool	Chunk::IsSetUp() const { return _isSetUp; }
 
 void	Chunk::CreateMesh()
 {
@@ -93,6 +103,7 @@ void	Chunk::CreateMesh()
 			}
 		}
 	}
+	_hasMesh = true;
 	_SendToOpenGL();
 }
 void	Chunk::_CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool lYPositive, bool lZNegative, bool lZPositive, float x, float y, float z)
@@ -149,6 +160,7 @@ void	Chunk::_SendToOpenGL()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
 
 	glBindVertexArray(0);
+	_isLoad = true;
 }
 
 void	Chunk::Draw() const

@@ -21,6 +21,10 @@ public:
 	void Unload();
 	void SetUpChunk();
 	Chunk &		operator=(Chunk const & rhs);
+
+	bool	IsLoad() const;
+	bool	HasMesh() const;
+	bool	IsSetUp() const;
 private:
 /*	private variables*/	
     unsigned int _vao;
@@ -31,8 +35,10 @@ private:
     Block _blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];// The blocks data
 /*	private functions*/	
 	void _CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool lYPositive, bool lZNegative, bool lZPositive, float x, float y, float z);
-    //void _CreateCube(float x, float y, float z);
     void _SendToOpenGL();
+	bool	_isLoad;
+	bool	_hasMesh;
+	bool	_isSetUp;
 };
 
 #endif
