@@ -25,15 +25,6 @@ public:
 
 	static const int BLOCK_SIZE = 1;
 
-	static const std::vector<unsigned int> front;
-	static const std::vector<unsigned int> back;
-	static const std::vector<unsigned int> top;
-	static const std::vector<unsigned int> bottom;
-	static const std::vector<unsigned int> left;
-	static const std::vector<unsigned int> right;
-
-
-
     bool IsActive() const;
     void SetActive(bool active);
     static const int RENDER_SIZE;
