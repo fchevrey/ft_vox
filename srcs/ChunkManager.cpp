@@ -25,6 +25,14 @@ void	ChunkManager::Draw()
 		(*it)->Draw();
 }
 
+void ChunkManager::_CheckUnload(float & coord, float & dif, std::shared_ptr<Chunk> chunk)
+{
+	if (chunk->IsLoad())
+	{
+		coord += dif > 0 ? Chunk::CHUNK_SIZE * RENDER_SIZE : -Chunk::CHUNK_SIZE * RENDER_SIZE;
+		chunk->Unload();
+	}
+}
 void ChunkManager::Update()
 {
 	int chunkUpdated = 0;
@@ -32,23 +40,11 @@ void ChunkManager::Update()
 	{
 		glm::vec3 dif = Camera::instance->GetPos() - (*it)->transform.position;
 		if (abs(dif.z) > Chunk::CHUNK_SIZE * (RENDER_SIZE / 2))
-		{
-			(*it)->transform.position.z += dif.z > 0 ? Chunk::CHUNK_SIZE * RENDER_SIZE : -Chunk::CHUNK_SIZE * RENDER_SIZE;
-			if ((*it)->IsLoad())
-				(*it)->Unload();
-		}
+			_CheckUnload((*it)->transform.position.z, dif.z, *it);
 		if (abs(dif.y) > Chunk::CHUNK_SIZE * (RENDER_SIZE / 2))
-		{
-			(*it)->transform.position.y += dif.y > 0 ? Chunk::CHUNK_SIZE * RENDER_SIZE : -Chunk::CHUNK_SIZE * RENDER_SIZE;
-			if ((*it)->IsLoad())
-				(*it)->Unload();
-		}
+			_CheckUnload((*it)->transform.position.y, dif.y, *it);
 		if (abs(dif.x) > Chunk::CHUNK_SIZE * (RENDER_SIZE / 2))
-		{
-			(*it)->transform.position.x += dif.x > 0 ? Chunk::CHUNK_SIZE * RENDER_SIZE : -Chunk::CHUNK_SIZE * RENDER_SIZE;
-			if ((*it)->IsLoad())
-				(*it)->Unload();
-		}
+			_CheckUnload((*it)->transform.position.x, dif.x, *it);
 		if (!(*it)->IsLoad() && chunkUpdated < ASYNC_NUM_CHUNKS_PER_FRAME)
 		{
 			(*it)->UpdateMatrix();

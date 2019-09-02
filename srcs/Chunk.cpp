@@ -13,6 +13,9 @@ Chunk::Chunk(void) : Renderer()
     
 Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform), _isLoad(false), _hasMesh(false), _isSetUp(false)
 {
+	glGenBuffers(1, &_vbo);
+	glGenBuffers(1, &_ebo);
+	glGenVertexArrays(1, &_vao);
 	SetUpChunk();
     CreateMesh();
     return;
@@ -35,9 +38,6 @@ void	Chunk::SetUpChunk()
 
 void	Chunk::Unload()
 {
-	glDeleteBuffers(1, &_ebo);
-	glDeleteBuffers(1, &_vbo);
-	glDeleteBuffers(1, &_vao);
 	_vertices.clear();
 	_indices.clear();
 	for (int x = 0; x < CHUNK_SIZE; x++)
@@ -55,6 +55,9 @@ void	Chunk::Unload()
 Chunk::~Chunk()
 {
 	Unload();
+	glDeleteBuffers(1, &_vbo);
+	glDeleteBuffers(1, &_ebo);
+	glDeleteBuffers(1, &_vao);
 }
 
 bool	Chunk::IsLoad() const { return _isLoad; }
@@ -145,9 +148,6 @@ void	Chunk::_CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool 
 
 void	Chunk::_SendToOpenGL()
 {
-	glGenBuffers(1, &_vbo);
-	glGenBuffers(1, &_ebo);
-	glGenVertexArrays(1, &_vao);
 	glBindVertexArray(_vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
