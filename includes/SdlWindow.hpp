@@ -14,6 +14,8 @@ public:
     void    SetResizable(bool state);
     int     GetWidth(void) const;
     int     GetHeight(void) const;
+	void	SetWidth(int width);
+	void	SetHeight(int height);
     void    CreateGlContext(int majVersion, int minVersion, bool doublebuffer, int depthSize);
     void    Swap(void) const;
     SDL_Window const    *GetWinPtr(void) const;

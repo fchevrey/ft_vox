@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/26 13:31:18 by jules             #+#    #+#             */
-/*   Updated: 2019/08/29 14:48:28 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/02 12:30:34 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Text
 
 		void	RenderText(const std::string text, float x, float y, float scale, glm::vec4 color);
 
+		void	UpdateProj();
 	private:
 		FT_Face			_face;
 		std::shared_ptr<Shader>	_shader;

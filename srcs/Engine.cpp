@@ -73,6 +73,14 @@ void            Engine42::Engine::AddPostProcessShader(std::shared_ptr<Shader> p
 	_inst._shaderFbo = postProcessShader;
 }
 
+void            Engine42::Engine::ResizeWindow(int width, int height)
+{
+	glViewport(0, 0, width, height);
+	SdlWindow::GetMain()->SetWidth(width);
+	SdlWindow::GetMain()->SetHeight(height);
+	_fontUI->UpdateProj();
+}
+
 void            Engine42::Engine::createFBO(void)
 {
 	glGenFramebuffers(1, &_inst._fbo);
@@ -147,6 +155,8 @@ void            Engine42::Engine::Loop(void)
 					|| (_inst._event.type == SDL_KEYDOWN 
 						&& _inst._event.key.keysym.sym == SDLK_ESCAPE))
 				quit = true;
+			if (_inst._event.type == SDL_WINDOWEVENT && _inst._event.window.event == SDL_WINDOWEVENT_RESIZED)
+				_inst.ResizeWindow(_inst._event.window.data1, _inst._event.window.data2);
 		}
 		_inst._keys = SDL_GetKeyboardState(NULL);
 		_inst._UpdateAll();
@@ -192,9 +202,7 @@ void                         Engine42::Engine::_RenderAll(void)
 	if (_shaderFbo != nullptr)
 		glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 	else
-	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
     for (auto it = _renderers.begin(); it != _renderers.end(); it++)
          (*it)->Draw();
     if (_skybox != nullptr)

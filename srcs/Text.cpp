@@ -57,6 +57,11 @@
 
 Text::~Text() {}
 
+void	Text::UpdateProj()
+{
+	_proj = glm::ortho(0.0f, (float)SdlWindow::GetMain()->GetWidth(), 0.0f, (float)SdlWindow::GetMain()->GetHeight());
+}
+
 void	Text::RenderText(const std::string text, float x, float y, float scale, glm::vec4 color)
 {
 	glDisable(GL_CULL_FACE);

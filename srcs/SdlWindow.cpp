@@ -9,9 +9,9 @@ SdlWindow::SdlWindow(int width, int height, bool isRenderer, bool isOpenGl, std:
         throw std::invalid_argument("window name cannot be empry");
     int flags;
     if (isOpenGl)
-        flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+        flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
     else
-        flags = SDL_WINDOW_SHOWN;
+        flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
     _width = width;
     _height = height;
     _renPtr = nullptr;
@@ -71,6 +71,8 @@ SdlWindow::~SdlWindow(void)
 #pragma region Getters_Setters
 int     SdlWindow::GetWidth(void)const { return _width;}
 int     SdlWindow::GetHeight(void) const {return _height;}
+void    SdlWindow::SetWidth(int width) { _width = width;}
+void    SdlWindow::SetHeight(int height) { _height = height;}
 SDL_Window const *SdlWindow::GetWinPtr(void) const{return _winPtr;}
 SDL_Renderer const *SdlWindow::GetRendererPtr(void) const{return _renPtr;}
 void    SdlWindow::SetSize(int width, int height)

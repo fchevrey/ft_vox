@@ -41,6 +41,7 @@ namespace Engine42
 			static bool             Destroy(std::shared_ptr<Renderer> renderer);
 			static std::shared_ptr<Text> GetFontUI();
 			static void             ReloadShaders(void);
+			void             ResizeWindow(int width, int height);
 
 			static void	createFBO();
 		private:
