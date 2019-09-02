@@ -11,7 +11,7 @@ Chunk::Chunk(void) : Renderer()
     return;
 }
     
-Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform), _isLoad(false), _hasMesh(false), _isSetUp(false)
+Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int texture) : Renderer(shader, transform), _text(texture), _isLoad(false), _hasMesh(false), _isSetUp(false)
 {
 	glGenBuffers(1, &_vbo);
 	glGenVertexArrays(1, &_vao);
@@ -110,12 +110,12 @@ void	Chunk::CreateMesh()
 void	Chunk::_AddFront(float x, float y, float z, float halfBlock)
 {
 	std::vector<float> vertices = {
-		x-halfBlock, y-halfBlock, z+halfBlock,
-		x+halfBlock, y-halfBlock, z+halfBlock,
-		x-halfBlock, y+halfBlock, z+halfBlock,
-		x-halfBlock, y+halfBlock, z+halfBlock,
-		x+halfBlock, y-halfBlock, z+halfBlock,
-		x+halfBlock, y+halfBlock, z+halfBlock
+		x-halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f,
+		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f,
+		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f,
+		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f,
+		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f,
+		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
@@ -123,12 +123,12 @@ void	Chunk::_AddFront(float x, float y, float z, float halfBlock)
 void	Chunk::_AddBack(float x, float y, float z, float halfBlock)
 {
 	std::vector<float> vertices = {
-		x-halfBlock, y+halfBlock, z-halfBlock,
-		x+halfBlock, y+halfBlock, z-halfBlock,
-		x-halfBlock, y-halfBlock, z-halfBlock,
-		x-halfBlock, y-halfBlock, z-halfBlock,
-		x+halfBlock, y+halfBlock, z-halfBlock,
-		x-halfBlock, y+halfBlock, z-halfBlock
+		x-halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f,
+		x+halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
+		x-halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f,
+		x-halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f,
+		x+halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
+		x+halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
@@ -136,12 +136,12 @@ void	Chunk::_AddBack(float x, float y, float z, float halfBlock)
 void	Chunk::_AddTop(float x, float y, float z, float halfBlock)
 {
 	std::vector<float> vertices = {
-		x-halfBlock, y+halfBlock, z+halfBlock,
-		x+halfBlock, y+halfBlock, z+halfBlock,
-		x-halfBlock, y+halfBlock, z-halfBlock,
-		x-halfBlock, y+halfBlock, z-halfBlock,
-		x+halfBlock, y+halfBlock, z+halfBlock,
-		x+halfBlock, y+halfBlock, z-halfBlock
+		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f,
+		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f,
+		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 1.0f,
+		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 1.0f,
+		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f,
+		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 1.0f,
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
@@ -149,12 +149,12 @@ void	Chunk::_AddTop(float x, float y, float z, float halfBlock)
 void	Chunk::_AddBottom(float x, float y, float z, float halfBlock)
 {
 	std::vector<float> vertices = {
-		x-halfBlock, y-halfBlock, z-halfBlock,
-		x+halfBlock, y-halfBlock, z-halfBlock,
-		x-halfBlock, y-halfBlock, z+halfBlock,
-		x-halfBlock, y-halfBlock, z+halfBlock,
-		x+halfBlock, y-halfBlock, z-halfBlock,
-		x+halfBlock, y-halfBlock, z+halfBlock
+		x-halfBlock, y-halfBlock, z+halfBlock, 0.0f, 0.0f,
+		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 0.0f,
+		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
+		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
+		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 0.0f,
+		x+halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f,
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
@@ -162,12 +162,12 @@ void	Chunk::_AddBottom(float x, float y, float z, float halfBlock)
 void	Chunk::_AddLeft(float x, float y, float z, float halfBlock)
 {
 	std::vector<float> vertices = {
-		x-halfBlock, y-halfBlock, z-halfBlock,
-		x-halfBlock, y-halfBlock, z+halfBlock,
-		x-halfBlock, y+halfBlock, z-halfBlock,
-		x-halfBlock, y+halfBlock, z-halfBlock,
-		x-halfBlock, y-halfBlock, z+halfBlock,
-		x-halfBlock, y+halfBlock, z+halfBlock
+		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
+		x-halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f,
+		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f,
+		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f,
+		x-halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f,
+		x-halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f,
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
@@ -175,12 +175,12 @@ void	Chunk::_AddLeft(float x, float y, float z, float halfBlock)
 void	Chunk::_AddRight(float x, float y, float z, float halfBlock)
 {
 	std::vector<float> vertices = {
-		x+halfBlock, y-halfBlock, z+halfBlock,
-		x+halfBlock, y-halfBlock, z-halfBlock,
-		x+halfBlock, y+halfBlock, z+halfBlock,
-		x+halfBlock, y+halfBlock, z+halfBlock,
-		x+halfBlock, y-halfBlock, z-halfBlock,
-		x+halfBlock, y+halfBlock, z-halfBlock
+		x+halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f,
+		x+halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f,
+		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f,
+		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f,
+		x+halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f,
+		x+halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f,
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
@@ -214,7 +214,9 @@ void	Chunk::_SendToOpenGL()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _vertices.size(), &_vertices[0], GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
 
 	glBindVertexArray(0);
 	_isLoad = true;
@@ -222,14 +224,17 @@ void	Chunk::_SendToOpenGL()
 
 void	Chunk::Draw() const
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	_shader->use();
 	_shader->setMat4("view", Camera::instance->GetMatView());
 	_shader->setMat4("projection", Camera::instance->GetMatProj());
 	_shader->setMat4("model", _modelMatrix);
+	_shader->setInt("text", 0);
 
 	glBindVertexArray(_vao);
-	glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 3.0f);
+	glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 5.0f);
 	glBindVertexArray(0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

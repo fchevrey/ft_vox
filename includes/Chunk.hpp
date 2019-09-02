@@ -11,7 +11,7 @@ class Chunk : public Renderer
 public: 
 /*	constructors / Destructor*/	
     Chunk(); 
-    Chunk(std::shared_ptr<Shader> shader, Transform transform); 
+    Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int texture); 
     virtual ~Chunk(void); 
 /*	public variables*/	
     static const int CHUNK_SIZE = 16;
@@ -29,6 +29,7 @@ private:
 /*	private variables*/	
     unsigned int _vao;
     unsigned int _vbo;
+    unsigned int _text;
     std::vector<float>	_vertices;
     Block _blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];// The blocks data
 /*	private functions*/	

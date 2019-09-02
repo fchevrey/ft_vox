@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 15:21:31 by jules             #+#    #+#             */
-/*   Updated: 2019/09/02 13:14:32 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/02 16:12:45 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class ChunkManager : public Engine42::IGameObject
 		static const int	ASYNC_NUM_CHUNKS_PER_FRAME = 4;
 	private:
 		std::list<std::shared_ptr<Chunk>>	_chunkList;
+		unsigned int						_text;
 
 		void _CheckUnload(float & coord, float & dif, std::shared_ptr<Chunk> chunk);
 };

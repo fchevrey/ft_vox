@@ -1,7 +1,34 @@
 #include "ChunkManager.hpp"
+#include "stb_image.h"
 
 ChunkManager::ChunkManager(std::shared_ptr<Shader> shader)
 {
+	glGenTextures(1, &_text);
+
+	int width, height, nrComponents;
+	unsigned char *data = stbi_load("ressources/textures/minecraft/test_2.png", &width, &height, &nrComponents, 0);
+	GLenum format;
+	if (nrComponents == 1)
+		format = GL_RED;
+	else if (nrComponents == 3)
+		format = GL_RGB;
+	else
+		format = GL_RGBA;
+
+	glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format, 16, 16, 1, 0, format, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+
+	glTexParameteri(GL_TEXTURE_2D_ARRAY,
+			GL_TEXTURE_MIN_FILTER,
+			GL_NEAREST_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY,
+			GL_TEXTURE_MAG_FILTER,
+			GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 4);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	stbi_image_free(data);
 	float	halfRenderSize = RENDER_SIZE / 2.0f;
 	for (int i = -halfRenderSize; i < halfRenderSize; i++)
 	{
@@ -9,7 +36,7 @@ ChunkManager::ChunkManager(std::shared_ptr<Shader> shader)
 		{
 			for (int k = -halfRenderSize; k < halfRenderSize; k++)
 			{
-				std::shared_ptr<Chunk> tmp(new Chunk(shader, Transform(glm::vec3(i * Chunk::CHUNK_SIZE, j * Chunk::CHUNK_SIZE, k * Chunk::CHUNK_SIZE))));
+				std::shared_ptr<Chunk> tmp(new Chunk(shader, Transform(glm::vec3(i * Chunk::CHUNK_SIZE, j * Chunk::CHUNK_SIZE, k * Chunk::CHUNK_SIZE)), _text));
 				_chunkList.push_back(tmp);
 				std::cout << i << std::endl;
 			}
@@ -35,7 +62,6 @@ void ChunkManager::_CheckUnload(float & coord, float & dif, std::shared_ptr<Chun
 }
 void ChunkManager::Update()
 {
-	
 	int chunkUpdated = 0;
 	for (auto it = _chunkList.begin(); it != _chunkList.end(); it++)
 	{
