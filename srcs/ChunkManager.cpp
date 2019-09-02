@@ -35,6 +35,7 @@ void ChunkManager::_CheckUnload(float & coord, float & dif, std::shared_ptr<Chun
 }
 void ChunkManager::Update()
 {
+	
 	int chunkUpdated = 0;
 	for (auto it = _chunkList.begin(); it != _chunkList.end(); it++)
 	{

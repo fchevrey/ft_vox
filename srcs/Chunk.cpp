@@ -14,7 +14,6 @@ Chunk::Chunk(void) : Renderer()
 Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform) : Renderer(shader, transform), _isLoad(false), _hasMesh(false), _isSetUp(false)
 {
 	glGenBuffers(1, &_vbo);
-	glGenBuffers(1, &_ebo);
 	glGenVertexArrays(1, &_vao);
 	SetUpChunk();
     CreateMesh();
@@ -39,7 +38,6 @@ void	Chunk::SetUpChunk()
 void	Chunk::Unload()
 {
 	_vertices.clear();
-	_indices.clear();
 	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
 		for (int y = 0; y < CHUNK_SIZE; y++)
@@ -56,7 +54,6 @@ Chunk::~Chunk()
 {
 	Unload();
 	glDeleteBuffers(1, &_vbo);
-	glDeleteBuffers(1, &_ebo);
 	glDeleteBuffers(1, &_vao);
 }
 
@@ -109,41 +106,104 @@ void	Chunk::CreateMesh()
 	_hasMesh = true;
 	_SendToOpenGL();
 }
-void	Chunk::_CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool lYPositive, bool lZNegative, bool lZPositive, float x, float y, float z)
+
+void	Chunk::_AddFront(float x, float y, float z, float halfBlock)
 {
-	float halfBlock = Block::BLOCK_SIZE / 2.0f;
 	std::vector<float> vertices = {
 		x-halfBlock, y-halfBlock, z+halfBlock,
 		x+halfBlock, y-halfBlock, z+halfBlock,
 		x-halfBlock, y+halfBlock, z+halfBlock,
-		x+halfBlock, y+halfBlock, z+halfBlock,
+		x-halfBlock, y+halfBlock, z+halfBlock,
+		x+halfBlock, y-halfBlock, z+halfBlock,
+		x+halfBlock, y+halfBlock, z+halfBlock
+	};
+
+	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
+}
+void	Chunk::_AddBack(float x, float y, float z, float halfBlock)
+{
+	std::vector<float> vertices = {
 		x-halfBlock, y+halfBlock, z-halfBlock,
 		x+halfBlock, y+halfBlock, z-halfBlock,
 		x-halfBlock, y-halfBlock, z-halfBlock,
-		x+halfBlock, y-halfBlock, z-halfBlock
+		x-halfBlock, y-halfBlock, z-halfBlock,
+		x+halfBlock, y+halfBlock, z-halfBlock,
+		x-halfBlock, y+halfBlock, z-halfBlock
 	};
 
-	std::vector<unsigned int> indices;
+	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
+}
+void	Chunk::_AddTop(float x, float y, float z, float halfBlock)
+{
+	std::vector<float> vertices = {
+		x-halfBlock, y+halfBlock, z+halfBlock,
+		x+halfBlock, y+halfBlock, z+halfBlock,
+		x-halfBlock, y+halfBlock, z-halfBlock,
+		x-halfBlock, y+halfBlock, z-halfBlock,
+		x+halfBlock, y+halfBlock, z+halfBlock,
+		x+halfBlock, y+halfBlock, z-halfBlock
+	};
+
+	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
+}
+void	Chunk::_AddBottom(float x, float y, float z, float halfBlock)
+{
+	std::vector<float> vertices = {
+		x-halfBlock, y-halfBlock, z-halfBlock,
+		x+halfBlock, y-halfBlock, z-halfBlock,
+		x-halfBlock, y-halfBlock, z+halfBlock,
+		x-halfBlock, y-halfBlock, z+halfBlock,
+		x+halfBlock, y-halfBlock, z-halfBlock,
+		x+halfBlock, y-halfBlock, z+halfBlock
+	};
+
+	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
+}
+void	Chunk::_AddLeft(float x, float y, float z, float halfBlock)
+{
+	std::vector<float> vertices = {
+		x-halfBlock, y-halfBlock, z-halfBlock,
+		x-halfBlock, y-halfBlock, z+halfBlock,
+		x-halfBlock, y+halfBlock, z-halfBlock,
+		x-halfBlock, y+halfBlock, z-halfBlock,
+		x-halfBlock, y-halfBlock, z+halfBlock,
+		x-halfBlock, y+halfBlock, z+halfBlock
+	};
+
+	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
+}
+void	Chunk::_AddRight(float x, float y, float z, float halfBlock)
+{
+	std::vector<float> vertices = {
+		x+halfBlock, y-halfBlock, z+halfBlock,
+		x+halfBlock, y-halfBlock, z-halfBlock,
+		x+halfBlock, y+halfBlock, z+halfBlock,
+		x+halfBlock, y+halfBlock, z+halfBlock,
+		x+halfBlock, y-halfBlock, z-halfBlock,
+		x+halfBlock, y+halfBlock, z-halfBlock
+	};
+
+	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
+}
+void	Chunk::_CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool lYPositive, bool lZNegative, bool lZPositive, float x, float y, float z)
+{
+	float halfBlock = Block::BLOCK_SIZE / 2.0f;
 
 	if (!lZNegative)
-		indices.insert(indices.end(), Block::back.begin(), Block::back.end());
+		_AddBack(x, y, z, halfBlock);
 	if (!lZPositive)
-		indices.insert(indices.end(), Block::front.begin(), Block::front.end());
+		_AddFront(x, y, z, halfBlock);
 
 	if (!lXNegative)
-		indices.insert(indices.end(), Block::left.begin(), Block::left.end());
+		_AddLeft(x, y, z, halfBlock);
 	if (!lXPositive)
-		indices.insert(indices.end(), Block::right.begin(), Block::right.end());
+		_AddRight(x, y, z, halfBlock);
 
 	if (!lYNegative)
-		indices.insert(indices.end(), Block::bottom.begin(), Block::bottom.end());
+		_AddBottom(x, y, z, halfBlock);
 	if (!lYPositive)
-		indices.insert(indices.end(), Block::top.begin(), Block::top.end());
+		_AddTop(x, y, z, halfBlock);
 
-	for (unsigned int& n : indices)
-		n += static_cast<unsigned int>(_vertices.size()) / 3.0f;
-	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
-	_indices.insert(_indices.end(), indices.begin(), indices.end());
 }
 
 void	Chunk::_SendToOpenGL()
@@ -152,9 +212,6 @@ void	Chunk::_SendToOpenGL()
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _vertices.size(), &_vertices[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * _indices.size(), &_indices[0], GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
@@ -172,7 +229,7 @@ void	Chunk::Draw() const
 	_shader->setMat4("model", _modelMatrix);
 
 	glBindVertexArray(_vao);
-	glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 3.0f);
 	glBindVertexArray(0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

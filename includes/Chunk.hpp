@@ -29,13 +29,17 @@ private:
 /*	private variables*/	
     unsigned int _vao;
     unsigned int _vbo;
-    unsigned int _ebo;
     std::vector<float>	_vertices;
-	std::vector<unsigned int>	_indices;
     Block _blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];// The blocks data
 /*	private functions*/	
 	void _CreateCube(bool lXNegative, bool lXPositive, bool lYNegative, bool lYPositive, bool lZNegative, bool lZPositive, float x, float y, float z);
     void _SendToOpenGL();
+	void _AddFront(float x, float y, float z, float halfBlock);
+	void _AddBack(float x, float y, float z, float halfBlock);
+	void _AddTop(float x, float y, float z, float halfBlock);
+	void _AddBottom(float x, float y, float z, float halfBlock);
+	void _AddLeft(float x, float y, float z, float halfBlock);
+	void _AddRight(float x, float y, float z, float halfBlock);
 	bool	_isLoad;
 	bool	_hasMesh;
 	bool	_isSetUp;
