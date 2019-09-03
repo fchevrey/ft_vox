@@ -5,30 +5,27 @@ ChunkManager::ChunkManager(std::shared_ptr<Shader> shader)
 {
 	glGenTextures(1, &_text);
 
+	int nbTexture = 4;
 	int width, height, nrComponents;
-	unsigned char *data = stbi_load("ressources/textures/minecraft/test_2.png", &width, &height, &nrComponents, 0);
-	GLenum format;
-	if (nrComponents == 1)
-		format = GL_RED;
-	else if (nrComponents == 3)
-		format = GL_RGB;
-	else
-		format = GL_RGBA;
-
 	glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
-	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format, 16, 16, 1, 0, format, GL_UNSIGNED_BYTE, data);
+	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 4, GL_RGB8, 16, 16, nbTexture);
+	for (int i = 0; i < nbTexture; i++)
+	{
+		std::string path = std::string(std::string("ressources/textures/minecraft/") + std::to_string(i) + std::string(".png"));
+		unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrComponents, STBI_rgb);
+
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i, width, height, 1, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+		stbi_image_free(data);
+	}
 	glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
-	glTexParameteri(GL_TEXTURE_2D_ARRAY,
-			GL_TEXTURE_MIN_FILTER,
-			GL_NEAREST_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY,
-			GL_TEXTURE_MAG_FILTER,
-			GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAX_LEVEL, 4);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	stbi_image_free(data);
+
 	float	halfRenderSize = RENDER_SIZE / 2.0f;
 	for (int i = -halfRenderSize; i < halfRenderSize; i++)
 	{

@@ -7,5 +7,5 @@ uniform sampler2DArray text;
 
 void	main()
 {
-	FragColor = vec4(texture(text, vec3(TexCoords, 1)).rgb, 1);
+	FragColor = vec4(texture(text, vec3(TexCoords, 2)).rgb, 1);
 }
