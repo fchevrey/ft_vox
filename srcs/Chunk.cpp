@@ -110,12 +110,14 @@ void	Chunk::CreateMesh()
 float	Chunk::_GetTexture(glm::vec3 normal, eBlockType type)
 {
 	if (type == Grass)
+	{
 		if (normal == glm::vec3(0.0f, 1.0f, 0.0f))
 				return 0.0f;
 		if (normal == glm::vec3(0.0f, -1.0f, 0.0f))
 				return 2.0f;
 		if (normal == glm::vec3(1.0f, 0.0f, 0.0f) || normal == glm::vec3(-1.0f, 0.0f, 0.0f) || normal == glm::vec3(0.0f, 0.0f, 1.0f) || normal == glm::vec3(0.0f, 0.0f, -1.0f))
 				return 3.0f;
+	}
 	if (type == Dirt)
 		return 2.0f;
 	if (type == Water)
@@ -265,6 +267,7 @@ void	Chunk::Draw() const
 	_shader->setMat4("view", Camera::instance->GetMatView());
 	_shader->setMat4("projection", Camera::instance->GetMatProj());
 	_shader->setMat4("model", _modelMatrix);
+	_shader->setVec3("uCamPos", Camera::instance->GetPos());
 	_shader->setInt("text", 0);
 
 	glBindVertexArray(_vao);

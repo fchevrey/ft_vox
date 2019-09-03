@@ -1,7 +1,7 @@
 #include "Block.hpp"
 #include <iostream>
 
-Block::Block(void) : _active(true) {}
+Block::Block(void) : _active(true), _blockType(static_cast<eBlockType>(rand() % 5)) {}
 
 Block::Block(bool active) : _active(active) {}
 
