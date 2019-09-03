@@ -2,7 +2,6 @@
 #include <iostream>
 
 Block::Block(void) : _active(true) {}
-const int Block::RENDER_SIZE = 16;
 
 Block::Block(bool active) : _active(active) {}
 
@@ -25,3 +24,7 @@ Block & Block::operator=(const Block &rhs)
 bool Block::IsActive() const { return _active; }
 
 void Block::SetActive(bool active) { _active = active; }
+
+eBlockType Block::GetType() const { return _blockType; }
+
+void Block::SetType(eBlockType type) { _blockType = type; }

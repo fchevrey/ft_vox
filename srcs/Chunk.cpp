@@ -107,80 +107,112 @@ void	Chunk::CreateMesh()
 	_SendToOpenGL();
 }
 
+float	Chunk::_GetTexture(glm::vec3 normal, eBlockType type)
+{
+	if (type == Grass)
+		if (normal == glm::vec3(0.0f, 1.0f, 0.0f))
+				return 0.0f;
+		if (normal == glm::vec3(0.0f, -1.0f, 0.0f))
+				return 2.0f;
+		if (normal == glm::vec3(1.0f, 0.0f, 0.0f) || normal == glm::vec3(-1.0f, 0.0f, 0.0f) || normal == glm::vec3(0.0f, 0.0f, 1.0f) || normal == glm::vec3(0.0f, 0.0f, -1.0f))
+				return 3.0f;
+	if (type == Dirt)
+		return 2.0f;
+	if (type == Water)
+		return 5.0f;
+	if (type == Stone)
+		return 1.0f;
+	if (type == Sand)
+		return 4.0f;
+	return 0.0f;
+}
+
 void	Chunk::_AddFront(float x, float y, float z, float halfBlock)
 {
+	glm::vec3 normal = glm::vec3(0.0f, 0.0f, 1.0f);
+	float texture = _GetTexture(normal, _blocks[static_cast<int>(x)][static_cast<int>(y)][static_cast<int>(z)].GetType());
 	std::vector<float> vertices = {
-		x-halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f,
-		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f,
-		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f,
-		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f,
-		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f,
-		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f
+		x-halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
 }
 void	Chunk::_AddBack(float x, float y, float z, float halfBlock)
 {
+	glm::vec3 normal = glm::vec3(0.0f, 0.0f, -1.0f);
+	float texture = _GetTexture(normal, _blocks[static_cast<int>(x)][static_cast<int>(y)][static_cast<int>(z)].GetType());
 	std::vector<float> vertices = {
-		x-halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f,
-		x+halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
-		x-halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f,
-		x-halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f,
-		x+halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
-		x+halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f
+		x-halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f, texture, normal.x, normal.y, normal.z
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
 }
 void	Chunk::_AddTop(float x, float y, float z, float halfBlock)
 {
+	glm::vec3 normal = glm::vec3(0.0f, 1.0f, 0.0f);
+	float texture = _GetTexture(normal, _blocks[static_cast<int>(x)][static_cast<int>(y)][static_cast<int>(z)].GetType());
 	std::vector<float> vertices = {
-		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f,
-		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f,
-		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 1.0f,
-		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 1.0f,
-		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f,
-		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 1.0f,
+		x-halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 1.0f, texture, normal.x, normal.y, normal.z
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
 }
 void	Chunk::_AddBottom(float x, float y, float z, float halfBlock)
 {
+	glm::vec3 normal = glm::vec3(0.0f, -1.0f, 0.0f);
+	float texture = _GetTexture(normal, _blocks[static_cast<int>(x)][static_cast<int>(y)][static_cast<int>(z)].GetType());
 	std::vector<float> vertices = {
-		x-halfBlock, y-halfBlock, z+halfBlock, 0.0f, 0.0f,
-		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 0.0f,
-		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
-		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
-		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 0.0f,
-		x+halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f,
+		x-halfBlock, y-halfBlock, z+halfBlock, 0.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z+halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f, texture, normal.x, normal.y, normal.z
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
 }
 void	Chunk::_AddLeft(float x, float y, float z, float halfBlock)
 {
+	glm::vec3 normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+	float texture = _GetTexture(normal, _blocks[static_cast<int>(x)][static_cast<int>(y)][static_cast<int>(z)].GetType());
 	std::vector<float> vertices = {
-		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f,
-		x-halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f,
-		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f,
-		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f,
-		x-halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f,
-		x-halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f,
+		x-halfBlock, y-halfBlock, z-halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z-halfBlock, 0.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y-halfBlock, z+halfBlock, 1.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x-halfBlock, y+halfBlock, z+halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
 }
 void	Chunk::_AddRight(float x, float y, float z, float halfBlock)
 {
+	glm::vec3 normal = glm::vec3(1.0f, 0.0f, 0.0f);
+	float texture = _GetTexture(normal, _blocks[static_cast<int>(x)][static_cast<int>(y)][static_cast<int>(z)].GetType());
 	std::vector<float> vertices = {
-		x+halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f,
-		x+halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f,
-		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f,
-		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f,
-		x+halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f,
-		x+halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f,
+		x+halfBlock, y-halfBlock, z-halfBlock, 1.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y+halfBlock, z-halfBlock, 1.0f, 0.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y-halfBlock, z+halfBlock, 0.0f, 1.0f, texture, normal.x, normal.y, normal.z,
+		x+halfBlock, y+halfBlock, z+halfBlock, 0.0f, 0.0f, texture, normal.x, normal.y, normal.z
 	};
 
 	_vertices.insert(_vertices.end(), vertices.begin(), vertices.end());
@@ -214,9 +246,11 @@ void	Chunk::_SendToOpenGL()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * _vertices.size(), &_vertices[0], GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 9, (void*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 9, (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 9, (void*)(sizeof(float) * 6));
 
 	glBindVertexArray(0);
 	_isLoad = true;
@@ -234,7 +268,7 @@ void	Chunk::Draw() const
 	_shader->setInt("text", 0);
 
 	glBindVertexArray(_vao);
-	glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 5.0f);
+	glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 9.0f);
 	glBindVertexArray(0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

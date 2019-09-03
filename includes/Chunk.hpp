@@ -41,6 +41,7 @@ private:
 	void _AddBottom(float x, float y, float z, float halfBlock);
 	void _AddLeft(float x, float y, float z, float halfBlock);
 	void _AddRight(float x, float y, float z, float halfBlock);
+	float _GetTexture(glm::vec3 normal, eBlockType type);
 	bool	_isLoad;
 	bool	_hasMesh;
 	bool	_isSetUp;

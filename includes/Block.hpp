@@ -9,7 +9,6 @@ enum eBlockType
 	Dirt,
 	Water,
 	Stone,
-    Wood,
     Sand,
     MAX,
 };
@@ -27,7 +26,9 @@ public:
 
     bool IsActive() const;
     void SetActive(bool active);
-    static const int RENDER_SIZE;
+
+    eBlockType GetType() const;
+    void SetType(eBlockType type);
 /*	functions   */	
 
     Block & operator=(const Block &rhs);
