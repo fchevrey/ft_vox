@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/03 14:09:42 by jules            ###   ########.fr        #
+#    Updated: 2019/09/03 14:20:56 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ INC = -I ./$(HEADER_DIR)
 
 SDL2_INC = $(shell sh ./lib/sdl2/bin/sdl2-config --cflags)
 
-LIB_INCS =	-I $(GLM_PATH)/ \
+LIB_INCS =	-I $(GLM_PATH)/glm \
 			$(SDL2_INC) \
 			-I $(ASSIMP_PATH)/include/ \
 			-I $(GLAD_PATH)/includes/ \
@@ -104,7 +104,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: ASSIMP SDL2 FREETYPE FastNoise GLAD print_name $(NAME) print_end
+all: ASSIMP SDL2 FREETYPE FastNoise GLAD GLM print_name $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -158,17 +158,32 @@ re_sanitize: rm_obj MODE_DEBUG
 sanitize:
 	@$(eval CFLAGS = -fsanitize=address)
 
+GLM:
+	@if [ ! -d "./lib/glm" ]; then \
+		echo "\033$(PINK)m⚠\tGlm is not installed ! ...\033[0m"; \
+		echo "\033$(CYAN)m➼\tDownloading Glm ...\033[0m"; \
+		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
+		cd lib &&\
+		git clone https://github.com/g-truc/glm glm;\
+	else \
+		echo "\033$(GREEN)m✓\tGlm already installed\033[0m"; \
+	fi
 GLAD:
 	@if [ ! -d "./lib/glad" ]; then \
 		echo "\033$(PINK)m⚠\tGlad is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tGlad FastNoise ...\033[0m"; \
+		echo "\033$(CYAN)m➼\tDownloading Glad ...\033[0m"; \
 		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
 		cd lib &&\
 		git clone https://github.com/jloro/Glad glad;\
 		cd glad;\
 		make;\
 	else \
 		echo "\033$(GREEN)m✓\tGlad already installed\033[0m"; \
+		make -C $(GLAD_PATH);\
 	fi
 
 FastNoise:
@@ -176,6 +191,8 @@ FastNoise:
 		echo "\033$(PINK)m⚠\tFastNoise is not installed ! ...\033[0m"; \
 		echo "\033$(CYAN)m➼\tDownloading FastNoise ...\033[0m"; \
 		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
 		cd lib &&\
 		git clone https://github.com/Auburns/FastNoise;\
 		cd FastNoise;\
@@ -189,6 +206,8 @@ FREETYPE:
 		echo "\033$(PINK)m⚠\tFreetype is not installed ! ...\033[0m"; \
 		echo "\033$(CYAN)m➼\tCompiling Freetype-$(FREETYPE_VER) ...\033[0m"; \
 		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
 		cd lib &&\
 		curl -OL https://mirrors.up.pt/pub/nongnu/freetype/freetype-2.10.0.tar.bz2 && \
 		tar -zxvf freetype-$(FREETYPE_VER).tar.bz2 && \
@@ -208,6 +227,8 @@ ASSIMP:
 		echo "\033$(PINK)m⚠\tAssimp is not installed ! ...\033[0m"; \
 		echo "\033$(CYAN)m➼\tCompiling assimp-$(ASSIMP_VER) ...\033[0m"; \
 		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
+		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
 		cd lib &&\
 		curl -OL https://github.com/assimp/assimp/archive/v4.1.0.tar.gz && \
 		tar -zxvf v$(ASSIMP_VER).tar.gz && \
