@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/08/28 11:51:20 by jules            ###   ########.fr        #
+#    Updated: 2019/09/03 14:01:30 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,12 +26,12 @@ SRCS_DIR = srcs
 SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
 		Engine.cpp MeshRenderer.cpp Terrain.cpp Transform.cpp Skybox.cpp \
 		PrintGlm.cpp Framebuffer.cpp PostProcess.cpp Block.cpp Text.cpp \
-		FpsDisplay.cpp Chunk.cpp Renderer.cpp
+		FpsDisplay.cpp Chunk.cpp Renderer.cpp \
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
 		IGameObject.hpp Engine.hpp Transform.hpp MeshRenderer.hpp Skybox.hpp \
 		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp \
-		Text.hpp FpsDisplay.hpp Chunk.hpp Renderer.hpp
+		Text.hpp FpsDisplay.hpp Chunk.hpp Renderer.hpp \
 
 ## Objects ##
 OBJS = $(SRCS:.cpp=.o)
@@ -158,11 +158,21 @@ re_sanitize: rm_obj MODE_DEBUG
 sanitize:
 	@$(eval CFLAGS = -fsanitize=address)
 
-GLAD: FastNoise
+GLAD:
 	make -C $(GLAD_PATH)
 
 FastNoise:
-	clang++ -c $(FASTNOISE_PATH)/FastNoise.cpp -o $(FASTNOISE_PATH)/FastNoise.o
+	@if [ ! -d "./lib/FastNoise" ]; then \
+		echo "\033$(PINK)m⚠\tFastNoise is not installed ! ...\033[0m"; \
+		echo "\033$(CYAN)m➼\tDownloading FastNoise ...\033[0m"; \
+		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
+		cd lib &&\
+		git clone https://github.com/Auburns/FastNoise;\
+		cd FastNoise;\
+		clang++ -std=c++11 -c FastNoise.cpp -o FastNoise.o;\
+	else \
+		echo "\033$(GREEN)m✓\tFastNoise already installed\033[0m"; \
+	fi
 
 FREETYPE:	
 	@if [ ! -d "./lib/freetype-$(FREETYPE_VER)" ]; then \
