@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:47:43 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/02 13:39:32 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/03 13:08:04 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <glm.hpp>
 # include "IGameObject.hpp"
 
-# define MOVE_SPEED 4.0f
+# define MOVE_SPEED 1.0f
 # define MOUSE_SENSITIVITY 0.1f
 # define FOV 80.0f
 

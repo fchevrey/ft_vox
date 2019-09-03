@@ -166,6 +166,8 @@ void            Engine42::Engine::Loop(void)
 		{
 			Time::SetFixedDeltaTime(fixedDelta);
 			_inst._FixedUpdateAll();
+			for (auto it = _inst._UI.begin(); it != _inst._UI.end(); it++)
+				 (*it)->FixedUpdate();
 			fixedDelta = 0.0f;
 		}
 		_inst._RenderAll();
