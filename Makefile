@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/03 14:04:36 by jules            ###   ########.fr        #
+#    Updated: 2019/09/03 14:09:42 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -104,7 +104,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: ASSIMP SDL2 FREETYPE FastNoise print_name GLAD $(NAME) print_end
+all: ASSIMP SDL2 FREETYPE FastNoise GLAD print_name $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -159,7 +159,17 @@ sanitize:
 	@$(eval CFLAGS = -fsanitize=address)
 
 GLAD:
-	make -C $(GLAD_PATH)
+	@if [ ! -d "./lib/glad" ]; then \
+		echo "\033$(PINK)m⚠\tGlad is not installed ! ...\033[0m"; \
+		echo "\033$(CYAN)m➼\tGlad FastNoise ...\033[0m"; \
+		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
+		cd lib &&\
+		git clone https://github.com/jloro/Glad glad;\
+		cd glad;\
+		make;\
+	else \
+		echo "\033$(GREEN)m✓\tGlad already installed\033[0m"; \
+	fi
 
 FastNoise:
 	@if [ ! -d "./lib/FastNoise" ]; then \
