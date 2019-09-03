@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:47:43 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/03 13:08:04 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/03 14:47:05 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ class Camera : public Engine42::IGameObject
 {
 	public:
 		Camera(float width, float height);
+		virtual ~Camera();
 
 		glm::mat4		GetMatView(void) const;
 		glm::mat4		GetMatProj(void) const;

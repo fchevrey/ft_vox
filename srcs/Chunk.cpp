@@ -3,7 +3,7 @@
 #include "glad.h"
 #include <iostream>
 #include "stdlib.h"
-
+#include "World.hpp"
 Chunk::Chunk(void) : Renderer()
 {
     glGenVertexArrays(1, &_vao);

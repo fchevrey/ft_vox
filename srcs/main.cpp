@@ -17,6 +17,7 @@
 #include FT_FREETYPE_H
 #include "Text.hpp"
 #include "FpsDisplay.hpp"
+#include "World.hpp"
 
 std::shared_ptr<Skybox> CreateSkyBox()
 {
@@ -81,6 +82,7 @@ int				main(int ac, char **av)
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
+	World world;
 	try
 	{
 		std::shared_ptr<Text>	font(new Text("ressources/fonts/Arial.ttf", ft));
