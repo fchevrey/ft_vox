@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/03 14:20:56 by jules            ###   ########.fr        #
+#    Updated: 2019/09/03 14:35:14 by jules            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -104,7 +104,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: ASSIMP SDL2 FREETYPE FastNoise GLAD GLM print_name $(NAME) print_end
+all: CHECK_LIB_DIR ASSIMP SDL2 FREETYPE FastNoise GLAD GLM print_name $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -264,10 +264,16 @@ SDL2:
 	else \
 		echo "\033$(GREEN)m✓\tSDl2-$(SDL_VER) already installed\033[0m"; \
 	fi
+
+CHECK_LIB_DIR:
+	@if [ ! -d "./lib" ]; then \
+		mkdir lib;\
+	fi
+
 print_name:
 	@echo "\033[033m➼\t\033[033mCompiling $(NAME) ...\033[0m"
 
 print_end:
 	@echo $(MESSAGE)
 .PHONY: all clean fclean re rm_obj exe SDL2 rm_SDL2 re_SDL2 GLAD ASSIMP\
-		 re_sanitize sanitize FastNoise
+		 re_sanitize sanitize FastNois CHECK_LIB_DIR
