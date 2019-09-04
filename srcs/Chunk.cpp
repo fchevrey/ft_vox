@@ -27,7 +27,7 @@ void	Chunk::SetUpChunk()
 		{
 			for (int z = 0; z < CHUNK_SIZE; z++)
 			{
-				if (y + transform.position.y > 8)
+				if (World::instance->_noise.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z)  > 0)
 					_blocks[x][y][z].SetActive(false);
 			}
 		}

@@ -6,9 +6,7 @@ World::World()
 {
 	if (World::instance == nullptr)
 		instance = this;
-	_noise.SetNoiseType(FastNoise::SimplexFractal);
-	_noise.SetFrequency(40.0f);
-	_noise.SetFractalOctaves(120);
+	_noise.SetNoiseType(FastNoise::PerlinFractal);
 }
 
 World::~World() {}
