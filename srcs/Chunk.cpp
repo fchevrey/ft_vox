@@ -27,14 +27,14 @@ void	Chunk::SetUpChunk()
 		{
 			float test;
 			if (transform.position.y >= 0)
-				test = abs(World::instance->_out.GetNoise(x + transform.position.x, z + transform.position.z) * 200);
+				test = abs(World::out.GetNoise(x + transform.position.x, z + transform.position.z) * 200);
 			else
 				test = 0;
 			for (int y = 0; y < CHUNK_SIZE; y++)
 			{
 				if (y + transform.position.y >= 0 && test < y + transform.position.y)
 					_blocks[x][y][z].SetActive(false);
-				else if (y + transform.position.y < -1 && World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
+				else if (y + transform.position.y < -1 && World::in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
 					_blocks[x][y][z].SetActive(false);
 				else if (y + transform.position.y >= 0)
 				{

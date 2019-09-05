@@ -18,13 +18,15 @@
 class World
 {
 	public:
-		World(void);
 		virtual	~World();
 
-		static World	*instance;
-		FastNoise	_out;
-		FastNoise	_in;
+		static void initWorld(int seed);
+		static FastNoise	out;
+		static FastNoise	in;
 	private:
+		World(void);
+		//static World	instance;
+	//static _
 };
 
 #endif

@@ -51,11 +51,29 @@ bool InitModels(SdlWindow &win)
 	Engine42::Engine::SetSkybox(sky);
 	shadersPath[1] = "shaders/Chunk.fs.glsl";
 	std::shared_ptr<Shader> 	greenShader(new Shader(shadersPath, type));
-	std::shared_ptr<ChunkManager> test(new ChunkManager(greenShader));
-	Engine42::Engine::AddGameObject(test);
+	std::shared_ptr<ChunkManager> chunkManager(new ChunkManager(greenShader));
+	Engine42::Engine::AddGameObject(chunkManager);
+	Engine42::Engine::AddRenderer(chunkManager);
 
 	return true;
 }
+void InitWorld(int ac, char **av)
+{
+	int seed = 1672 ;
+	if (ac > 1)
+	{
+		try 
+		{
+			seed = std::atoi(av[1]);
+		}
+		catch (std::exception &e)
+		{
+			seed = 1672;
+		}
+	}
+	World::initWorld(seed);
+}
+
 int				main(int ac, char **av)
 {
 	if (ac < -1 && av == nullptr)
@@ -82,7 +100,7 @@ int				main(int ac, char **av)
 	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
-	World world;
+	InitWorld(ac, av);
 	try
 	{
 		std::shared_ptr<Text>	font(new Text("ressources/fonts/Arial.ttf", ft));

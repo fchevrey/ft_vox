@@ -17,7 +17,7 @@
 # include "Chunk.hpp"
 # include "IGameObject.hpp"
 
-class ChunkManager : public Engine42::IGameObject
+class ChunkManager : public Engine42::IGameObject, public Renderer
 {
 	public:
 		ChunkManager(std::shared_ptr<Shader> shader); 
@@ -26,7 +26,9 @@ class ChunkManager : public Engine42::IGameObject
 		virtual void	Update(void);
 		virtual void	FixedUpdate(void);
 
-		void Draw();
+		//void Draw();
+    	virtual void Draw() const;
+
 		static const int	RENDER_SIZE = 10;
 		static const int	ASYNC_NUM_CHUNKS_PER_FRAME = 8;
 	private:

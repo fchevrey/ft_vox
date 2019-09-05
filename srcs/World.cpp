@@ -1,14 +1,18 @@
 #include "World.hpp"
 #include <iostream>
-World		*World::instance = nullptr;
+//World		World::instance = World();
+FastNoise World::out = FastNoise();
+FastNoise World::in = FastNoise();
+//World		World::instance = World();
 
-World::World()
+World::World() {}
+
+void World::initWorld(int seed)
 {
-	if (World::instance == nullptr)
-		instance = this;
-	_out.SetNoiseType(FastNoise::PerlinFractal);
-	_in.SetNoiseType(FastNoise::SimplexFractal);
-	_in.SetFractalType(FastNoise::Billow);
+	out.SetSeed(seed);
+	in.SetSeed(seed);
+	out.SetNoiseType(FastNoise::PerlinFractal);
+	in.SetNoiseType(FastNoise::SimplexFractal);
+	in.SetFractalType(FastNoise::Billow);
 }
-
 World::~World() {}
