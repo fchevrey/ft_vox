@@ -87,7 +87,7 @@ LFLAGS =	$(GLAD_PATH)/glad.o\
 			$(FASTNOISE_PATH)/FastNoise.o\
 			-L $(ASSIMP_PATH)/lib -lassimp\
 			$(SDL2_LFLAGS) \
-			-L $(FREETYPE_PATH)/build -lfreetype -lbz2
+			-L $(FREETYPE_PATH)/build -L ~/.brew/lib/ -lfreetype -lbz2 -lpng -lz
 
 LDFLAGS = "-Wl,-rpath,lib/assimp-4.1.0/lib"	
 
