@@ -1,7 +1,7 @@
 #include "ChunkManager.hpp"
 #include "stb_image.h"
 
-ChunkManager::ChunkManager(std::shared_ptr<Shader> shader)
+ChunkManager::ChunkManager(std::shared_ptr<Shader> shader) : Renderer(shader)
 {
 	glGenTextures(1, &_text);
 
@@ -43,7 +43,7 @@ ChunkManager::ChunkManager(std::shared_ptr<Shader> shader)
 
 ChunkManager::~ChunkManager() {}
 
-void	ChunkManager::Draw()
+void	ChunkManager::Draw() const
 {
 	for (auto it = _chunkList.begin(); it != _chunkList.end(); it++)
 		(*it)->Draw();
@@ -77,7 +77,6 @@ void ChunkManager::Update()
 			chunkUpdated++;
 		}
 	}
-	Draw();
 }
 
 void ChunkManager::FixedUpdate()
