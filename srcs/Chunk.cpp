@@ -11,7 +11,7 @@ Chunk::Chunk(void) : Renderer()
     return;
 }
     
-Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int texture) : Renderer(shader, transform), _text(texture), _isLoad(false), _hasMesh(false), _isSetUp(false)
+Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int texture) : Renderer(shader, transform), _text(texture), _isLoad(false), _hasMesh(false), _isSetUp(false), _isEmpty(false)
 {
 	glGenBuffers(1, &_vbo);
 	glGenVertexArrays(1, &_vao);
@@ -32,19 +32,22 @@ void	Chunk::SetUpChunk()
 				test = 0;
 			for (int y = 0; y < CHUNK_SIZE; y++)
 			{
-				if (y + transform.position.y >= 0 && test < y + transform.position.y)
-					_blocks[x][y][z].SetActive(false);
-				else if (y + transform.position.y < 0 && World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
-					_blocks[x][y][z].SetActive(false);
-				else
+				if (y + transform.position.y >= 0)
 				{
-					if (y + transform.position.y > 70)
+					if (test < y + transform.position.y)
+						_blocks[x][y][z].SetActive(false);
+					else if (y + transform.position.y > 70)
 						_blocks[x][y][z].SetType(Snow);
-					if (y + transform.position.y > 10 && y + transform.position.y < 15)
+					else if (y + transform.position.y > 10 && y + transform.position.y < 15)
 						_blocks[x][y][z].SetType(Sand);
-					if (y + transform.position.y <= 10 && y + transform.position.y >= 0)
+					else if (y + transform.position.y <= 10 && y + transform.position.y >= 0)
 						_blocks[x][y][z].SetType(Water);
 				}
+				else if (y + transform.position.y < -1 && World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
+					_blocks[x][y][z].SetActive(false);
+
+				if (_blocks[x][y][z].IsActive())
+					_isEmpty = false;
 			}
 		}
 	}
@@ -59,12 +62,16 @@ void	Chunk::Unload()
 		for (int y = 0; y < CHUNK_SIZE; y++)
 		{
 			for (int z = 0; z < CHUNK_SIZE; z++)
+			{
 				_blocks[x][y][z].SetActive(true);
+				_blocks[x][y][z].SetType(Grass);
+			}
 		}
 	}
 	_isLoad = false;
 	_hasMesh = false;
 	_isSetUp = false;
+	_isEmpty = false;
 }
 Chunk::~Chunk()
 {
@@ -78,6 +85,8 @@ bool	Chunk::IsLoad() const { return _isLoad; }
 bool	Chunk::HasMesh() const { return _hasMesh; }
 
 bool	Chunk::IsSetUp() const { return _isSetUp; }
+
+bool	Chunk::IsEmpty() const { return _isEmpty; }
 
 void	Chunk::CreateMesh()
 {
@@ -94,10 +103,24 @@ void	Chunk::CreateMesh()
 				bool lXNegative = lDefault;
 				if (x > 0)
 					lXNegative = _blocks[x - 1][y][z].IsActive();
+				else
+				{
+					if (y + transform.position.y >= 0 && abs(World::instance->_out.GetNoise(x - 1 + transform.position.x, z + transform.position.z) * 200) < y + transform.position.y)
+						lXNegative = false;
+					else
+						lXNegative = true;
+				}
 
 				bool lXPositive = lDefault;
 				if (x < CHUNK_SIZE - 1)
 					lXPositive = _blocks[x + 1][y][z].IsActive();
+				else
+				{
+					if (y + transform.position.y >= 0 && abs(World::instance->_out.GetNoise(x + 1 + transform.position.x, z + transform.position.z) * 200) < y + transform.position.y)
+						lXNegative = false;
+					else
+						lXNegative = true;
+				}
 
 				bool lYNegative = lDefault;
 				if (y > 0)
@@ -120,7 +143,8 @@ void	Chunk::CreateMesh()
 		}
 	}
 	_hasMesh = true;
-	_SendToOpenGL();
+	if (!_isEmpty)
+		_SendToOpenGL();
 }
 
 float	Chunk::_GetTexture(glm::vec3 normal, eBlockType type)
@@ -287,19 +311,22 @@ void	Chunk::_SendToOpenGL()
 
 void	Chunk::Draw() const
 {
-	glCullFace(GL_BACK);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	_shader->use();
-	_shader->setMat4("view", Camera::instance->GetMatView());
-	_shader->setMat4("projection", Camera::instance->GetMatProj());
-	_shader->setMat4("model", _modelMatrix);
-	_shader->setVec3("uCamPos", Camera::instance->GetPos());
-	_shader->setInt("text", 0);
+	if (!_isEmpty)
+	{
+		glCullFace(GL_BACK);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		_shader->use();
+		_shader->setMat4("view", Camera::instance->GetMatView());
+		_shader->setMat4("projection", Camera::instance->GetMatProj());
+		_shader->setMat4("model", _modelMatrix);
+		_shader->setVec3("uCamPos", Camera::instance->GetPos());
+		_shader->setInt("text", 0);
 
-	glBindVertexArray(_vao);
-	glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 9.0f);
-	glBindVertexArray(0);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glBindVertexArray(_vao);
+		glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 9.0f);
+		glBindVertexArray(0);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 }

@@ -25,6 +25,7 @@ public:
 	bool	IsLoad() const;
 	bool	HasMesh() const;
 	bool	IsSetUp() const;
+	bool	IsEmpty() const;
 private:
 /*	private variables*/	
     unsigned int _vao;
@@ -45,6 +46,7 @@ private:
 	bool	_isLoad;
 	bool	_hasMesh;
 	bool	_isSetUp;
+	bool	_isEmpty;
 };
 
 #endif
