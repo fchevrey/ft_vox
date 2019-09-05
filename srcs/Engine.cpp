@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-#include "Chunk.hpp"
 
 Engine42::Engine          Engine42::Engine::_inst = Engine();
 Engine42::Engine::Engine(void){
@@ -74,6 +73,14 @@ void            Engine42::Engine::AddPostProcessShader(std::shared_ptr<Shader> p
 	_inst._shaderFbo = postProcessShader;
 }
 
+void            Engine42::Engine::ResizeWindow(int width, int height)
+{
+	glViewport(0, 0, width, height);
+	SdlWindow::GetMain()->SetWidth(width);
+	SdlWindow::GetMain()->SetHeight(height);
+	_fontUI->UpdateProj();
+}
+
 void            Engine42::Engine::createFBO(void)
 {
 	glGenFramebuffers(1, &_inst._fbo);
@@ -135,7 +142,7 @@ void            Engine42::Engine::Loop(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_CULL_FACE);  
+		glEnable(GL_CULL_FACE);  
 		delta = (((float)SDL_GetTicks()) / 1000) - lastTime;
 		Time::SetDeltaTime(delta);
 		_inst._event.type = SDL_USEREVENT;
@@ -148,6 +155,8 @@ void            Engine42::Engine::Loop(void)
 					|| (_inst._event.type == SDL_KEYDOWN 
 						&& _inst._event.key.keysym.sym == SDLK_ESCAPE))
 				quit = true;
+			if (_inst._event.type == SDL_WINDOWEVENT && _inst._event.window.event == SDL_WINDOWEVENT_RESIZED)
+				_inst.ResizeWindow(_inst._event.window.data1, _inst._event.window.data2);
 		}
 		_inst._keys = SDL_GetKeyboardState(NULL);
 		_inst._UpdateAll();
@@ -157,6 +166,8 @@ void            Engine42::Engine::Loop(void)
 		{
 			Time::SetFixedDeltaTime(fixedDelta);
 			_inst._FixedUpdateAll();
+			for (auto it = _inst._UI.begin(); it != _inst._UI.end(); it++)
+				 (*it)->FixedUpdate();
 			fixedDelta = 0.0f;
 		}
 		_inst._RenderAll();
@@ -185,8 +196,6 @@ void                         Engine42::Engine::_RenderAll(void)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 	}
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);  
 	_renderers.sort(_sort);
@@ -195,9 +204,7 @@ void                         Engine42::Engine::_RenderAll(void)
 	if (_shaderFbo != nullptr)
 		glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 	else
-	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
     for (auto it = _renderers.begin(); it != _renderers.end(); it++)
          (*it)->Draw();
     if (_skybox != nullptr)

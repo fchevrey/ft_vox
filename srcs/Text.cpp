@@ -3,12 +3,11 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 
-Text::Text(){}
-/* Text::Text(const std::string font, FT_Library lib)
+ Text::Text(const std::string font, FT_Library lib)
 {
 	if (FT_New_Face(lib, font.c_str(), 0, &_face))
 		throw std::runtime_error(std::string("Could not open font ") + font);
-	_proj = glm::ortho(0.0, 800.0, 0.0, 400.0);
+	_proj = glm::ortho(0.0f, (float)SdlWindow::GetMain()->GetWidth(), 0.0f, (float)SdlWindow::GetMain()->GetHeight());
 	FT_Set_Pixel_Sizes(_face, 0, 24);
 	std::vector<const char *>	shadersPath{"shaders/Text.vs.glsl", "shaders/Text.fs.glsl"};
 	std::vector<GLenum> type{GL_VERTEX_SHADER, GL_FRAGMENT_SHADER};
@@ -54,9 +53,14 @@ Text::Text(){}
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-}*/
+}
 
 Text::~Text() {}
+
+void	Text::UpdateProj()
+{
+	_proj = glm::ortho(0.0f, (float)SdlWindow::GetMain()->GetWidth(), 0.0f, (float)SdlWindow::GetMain()->GetHeight());
+}
 
 void	Text::RenderText(const std::string text, float x, float y, float scale, glm::vec4 color)
 {
@@ -88,7 +92,7 @@ void	Text::RenderText(const std::string text, float x, float y, float scale, glm
 		};
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, vertices, GL_DYNAMIC_DRAW);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		x += (ch.Advance >> 6) * scale;

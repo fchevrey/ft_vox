@@ -2,14 +2,15 @@
 # define BLOCK_HPP
 
 # include <iostream>
+# include <vector>
 enum eBlockType
 {
 	Grass = 0,
 	Dirt,
 	Water,
 	Stone,
-    Wood,
     Sand,
+	Snow,
     MAX,
 };
 
@@ -26,7 +27,9 @@ public:
 
     bool IsActive() const;
     void SetActive(bool active);
-    static const int RENDER_SIZE;
+
+    eBlockType GetType() const;
+    void SetType(eBlockType type);
 /*	functions   */	
 
     Block & operator=(const Block &rhs);

@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/07/29 12:07:39 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/03 14:47:18 by jules            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ Camera::Camera(float width, float height) : _moveSpeed(MOVE_SPEED), _mouseSensit
 	_dir = glm::vec3(0.0f, 0.0f, -1.0f);
 	_CalcMatrix();
 }
+
+Camera::~Camera() {}
 
 glm::mat4	Camera::GetMatView(void) const { return _view; }
 glm::mat4	Camera::GetMatProj(void) const { return _projection; }
@@ -68,7 +70,7 @@ void	Camera::FixedUpdate() {}
 
 void	Camera::Move(eCameraDirection dir, float deltaTime)
 {
-	float moveSpeed = _sprint ? _moveSpeed * 4 : _moveSpeed;
+	float moveSpeed = _sprint ? _moveSpeed * 20 : _moveSpeed;
 	if (dir == Forward)
 		_pos += moveSpeed * deltaTime * _dir;
 	else if (dir == Backward)
@@ -90,7 +92,7 @@ void	Camera::_CalcMatrix()
 	_right = glm::normalize(glm::cross(_dir, glm::vec3(0.0f, 1.0f, 0.0f)));
 	_up = glm::normalize(glm::cross(_right, _dir));
 	_view = glm::lookAt(_pos, _pos + _dir, _up);
-	_projection = glm::perspective(glm::radians(FOV), _width / _height, 0.1f, 100.0f);
+	_projection = glm::perspective(glm::radians(FOV), _width / _height, 0.1f, 200.0f);
 }
 
 void	Camera::LookAround(float xoffset, float yoffset)
