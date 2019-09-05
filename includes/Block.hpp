@@ -10,6 +10,7 @@ enum eBlockType
 	Water,
 	Stone,
     Sand,
+	Snow,
     MAX,
 };
 

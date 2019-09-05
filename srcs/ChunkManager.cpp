@@ -5,7 +5,7 @@ ChunkManager::ChunkManager(std::shared_ptr<Shader> shader)
 {
 	glGenTextures(1, &_text);
 
-	int nbTexture = 6;
+	int nbTexture = 8;
 	int width, height, nrComponents;
 	glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
 	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 4, GL_RGB8, 16, 16, nbTexture);

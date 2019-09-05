@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/03 14:41:12 by jules             #+#    #+#             */
-/*   Updated: 2019/09/03 14:51:49 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/05 15:33:01 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ class World
 		virtual	~World();
 
 		static World	*instance;
-		FastNoise	_noise;
+		FastNoise	_out;
+		FastNoise	_in;
 	private:
 };
 

@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/03 14:42:25 by jules            ###   ########.fr        #
+#    Updated: 2019/09/04 10:53:30 by jloro            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -88,7 +88,7 @@ LFLAGS =	$(GLAD_PATH)/glad.o\
 			$(FASTNOISE_PATH)/FastNoise.o\
 			-L $(ASSIMP_PATH)/lib -lassimp\
 			$(SDL2_LFLAGS) \
-			-L $(FREETYPE_PATH)/build -lfreetype -lbz2
+			-L $(FREETYPE_PATH)/build -L ~/.brew/lib/ -lfreetype -lbz2 -lpng -lz
 
 LDFLAGS = "-Wl,-rpath,lib/assimp-4.1.0/lib"	
 
