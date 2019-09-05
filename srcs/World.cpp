@@ -1,9 +1,8 @@
 #include "World.hpp"
 #include <iostream>
-//World		World::instance = World();
+
 FastNoise World::out = FastNoise();
 FastNoise World::in = FastNoise();
-//World		World::instance = World();
 
 World::World() {}
 
