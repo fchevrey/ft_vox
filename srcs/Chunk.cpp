@@ -34,9 +34,9 @@ void	Chunk::SetUpChunk()
 			{
 				if (y + transform.position.y >= 0 && test < y + transform.position.y)
 					_blocks[x][y][z].SetActive(false);
-				else if (y + transform.position.y < 0 && World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
+				else if (y + transform.position.y < -1 && World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
 					_blocks[x][y][z].SetActive(false);
-				else
+				else if (y + transform.position.y >= 0)
 				{
 					if (y + transform.position.y > 70)
 						_blocks[x][y][z].SetType(Snow);
