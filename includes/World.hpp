@@ -25,8 +25,6 @@ class World
 		static FastNoise	in;
 	private:
 		World(void);
-		//static World	instance;
-	//static _
 };
 
 #endif

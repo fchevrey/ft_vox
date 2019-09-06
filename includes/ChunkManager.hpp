@@ -33,6 +33,8 @@ class ChunkManager : public Engine42::IGameObject, public Renderer
 		static const int	ASYNC_NUM_CHUNKS_PER_FRAME = 8;
 	private:
 		std::list<std::shared_ptr<Chunk>>	_chunkList;
+		std::list<std::shared_ptr<Chunk>>	_chunkToDraw;
+		//std::list<std::shared_ptr<Chunk>>	_chunkList;
 		unsigned int						_text;
 
 		void _CheckUnload(float & coord, float & dif, std::shared_ptr<Chunk> chunk);
