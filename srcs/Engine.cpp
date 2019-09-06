@@ -142,7 +142,7 @@ void            Engine42::Engine::Loop(void)
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);  
+		glDisable(GL_CULL_FACE);  
 		delta = (((float)SDL_GetTicks()) / 1000) - lastTime;
 		Time::SetDeltaTime(delta);
 		_inst._event.type = SDL_USEREVENT;
@@ -197,7 +197,6 @@ void                         Engine42::Engine::_RenderAll(void)
 		glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
 	}
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);  
 	_renderers.sort(_sort);
     for (auto it = _framebuffers.begin(); it != _framebuffers.end(); it++)
          (*it)->genTexture();

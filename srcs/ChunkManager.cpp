@@ -53,7 +53,10 @@ bool		sortChunk(const std::shared_ptr<Chunk> &first, const std::shared_ptr<Chunk
 void	ChunkManager::Draw() const
 {
 	for (auto it = _chunkToDraw.begin(); it != _chunkToDraw.end(); it++)
-		(*it)->Draw();
+	{
+		if ((*it)->IsLoad() && !(*it)->IsEmpty())
+			(*it)->Draw();
+	}
 }
 
 void ChunkManager::_CheckUnload(float & coord, float & dif, std::shared_ptr<Chunk> chunk)
