@@ -75,10 +75,6 @@ void    Skybox::Draw(void) const
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LESS);
 }
-void    Skybox::Draw(const std::shared_ptr<Shader> shader) const
-{
-	_model->Draw(shader);
-}
 
 unsigned int Skybox::_LoadCubeMap(const std::vector<std::string> &filenames)
 {

@@ -6,7 +6,7 @@
 #    By: fchevrey <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 16:05:39 by fchevrey          #+#    #+#              #
-#    Updated: 2019/09/06 14:13:57 by jloro            ###   ########.fr        #
+#    Updated: 2019/09/06 14:22:26 by jloro            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,12 +23,12 @@ ORANGE = [038;2;239;138;5
 ## Sources ##
 SRCS_DIR = srcs
 
-SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
+SRCS =  Time.cpp SdlWindow.cpp main.cpp Shader.cpp Camera.cpp \
 		Engine.cpp  Transform.cpp Skybox.cpp \
 		PrintGlm.cpp  Block.cpp Text.cpp \
 		FpsDisplay.cpp Chunk.cpp Renderer.cpp ChunkManager.cpp World.cpp \
 
-HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
+HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Time.hpp \
 		IGameObject.hpp Engine.hpp Transform.hpp Skybox.hpp \
 		 PrintGlm.hpp  Block.hpp \
 		Text.hpp FpsDisplay.hpp Chunk.hpp Renderer.hpp ChunkManager.hpp \
@@ -45,8 +45,6 @@ LIB_DIR = ./lib
 
 ## Macros for extern library installation ##
 SDL_VER = 2.0.9
-SDL_IMAGE_VER = 2.0.4
-ASSIMP_VER = 4.1.0
 FREETYPE_VER = 2.10.0
 
 MAIN_DIR_PATH = $(shell pwd)
@@ -54,7 +52,6 @@ SDL_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2)
 SDL_IMAGE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/sdl2_image)
 GLAD_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glad)
 GLM_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/glm)
-ASSIMP_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/assimp-$(ASSIMP_VER))
 FREETYPE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/freetype-$(FREETYPE_VER))
 FASTNOISE_PATH = $(addprefix $(MAIN_DIR_PATH), /lib/FastNoise)
 
@@ -69,7 +66,6 @@ SDL2_INC = $(shell sh ./lib/sdl2/bin/sdl2-config --cflags)
 
 LIB_INCS =	-I $(GLM_PATH)/glm \
 			$(SDL2_INC) \
-			-I $(ASSIMP_PATH)/include/ \
 			-I $(GLAD_PATH)/includes/ \
 			-I $(FASTNOISE_PATH)/ \
 			-I $(FREETYPE_PATH)/include
@@ -86,12 +82,8 @@ SDL2_LFLAGS = $(shell sh ./lib/sdl2/bin/sdl2-config --libs)
 
 LFLAGS =	$(GLAD_PATH)/glad.o\
 			$(FASTNOISE_PATH)/FastNoise.o\
-			-L $(ASSIMP_PATH)/lib -lassimp\
 			$(SDL2_LFLAGS) \
 			-L $(FREETYPE_PATH)/build -L ~/.brew/lib/ -lfreetype -lbz2 -lpng -lz
-
-LDFLAGS = "-Wl,-rpath,lib/assimp-4.1.0/lib"	
-
 
 FRAMEWORK = -framework Carbon -framework OpenGL -framework IOKit -framework CoreVideo
 #FRAMEWORK = -lGL -ldl #-lGLU #-lglut
@@ -105,7 +97,7 @@ DONE_MESSAGE = "\033$(GREEN)2m✓\t\033$(GREEN)mDONE !\033[0m\
 
 ## RULES ##
 
-all: CHECK_LIB_DIR ASSIMP SDL2 FREETYPE FastNoise GLAD GLM print_name $(NAME) print_end
+all: CHECK_LIB_DIR SDL2 FREETYPE FastNoise GLAD GLM print_name $(NAME) print_end
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp $(HEADERS)
 	@echo "\033$(PURPLE)m⧖	Creating	$@\033[0m"
@@ -221,27 +213,6 @@ FREETYPE:
 		echo "\033$(GREEN)m✓\tfreetype-$(FREETYPE_VER) installed !\033[0m"; \
 	else \
 		echo "\033$(GREEN)m✓\tfreetype-$(FREETYPE_VER) already installed\033[0m"; \
-	fi
-
-ASSIMP:	
-	@if [ ! -d "./lib/assimp-$(ASSIMP_VER)" ]; then \
-		echo "\033$(PINK)m⚠\tAssimp is not installed ! ...\033[0m"; \
-		echo "\033$(CYAN)m➼\tCompiling assimp-$(ASSIMP_VER) ...\033[0m"; \
-		printf "\r\033$(YELLOW)m\tIn 3 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)m\tIn 2 ...\033[0m"; sleep 1; \
-		printf "\r\033$(YELLOW)3m\tIn 1 ...\033[0m"; sleep 1; printf "\n"; \
-		cd lib &&\
-		curl -OL https://github.com/assimp/assimp/archive/v4.1.0.tar.gz && \
-		tar -zxvf v$(ASSIMP_VER).tar.gz && \
-		rm v$(ASSIMP_VER).tar.gz && \
-		mkdir -p $(ASSIMP_PATH) && \
-		cd assimp-$(ASSIMP_VER) && \
-			cmake . && \
-			make && \
-		cd ../.. && \
-		echo "\033$(GREEN)m✓\tassimp-$(ASSIMP_VER)installed !\033[0m"; \
-	else \
-		echo "\033$(GREEN)m✓\tassimp-$(ASSIMP_VER) already installed\033[0m"; \
 	fi
 
 SDL2:

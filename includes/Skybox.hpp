@@ -3,14 +3,11 @@
 
 # include <iostream>
 # include <vector>
-/* # ifndef STB_IMAGE_IMPLEMENTATION
-#  define STB_IMAGE_IMPLEMENTATION
-# endif*/
-# include "stb_image.h"
+#include "stb_image.h"
 # include "glad.h"
 # include "Shader.hpp"
 # include "Camera.hpp"
-# include "Model.hpp"
+#include "Texture.hpp"
 # include <memory>
 class Skybox
 {
@@ -23,7 +20,6 @@ public:
 /*	public variables*/	
 /*	public functions*/	
     virtual void            Draw() const;
-    virtual void    Draw(const std::shared_ptr<Shader> shader) const ;
 	void	_LoadModel();
 
     std::string const	toString(void) const;
@@ -36,7 +32,6 @@ protected:
     unsigned int _cubeMap;
 /*	protected variables*/
     std::shared_ptr<Shader>         _shader;
-    std::shared_ptr<Model>           _model;
 /*	protected functions*/
     //void _CreateCube(void);
 

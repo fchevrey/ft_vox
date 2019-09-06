@@ -1,15 +1,14 @@
 
+ # ifndef STB_IMAGE_IMPLEMENTATION
+#  define STB_IMAGE_IMPLEMENTATION
+# endif
 #include "ChunkManager.hpp"
 #include "SdlWindow.hpp"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
-#include "assimp/Importer.hpp"      // C++ importer interface
-#include "assimp/scene.h"           // Output data structure
-#include "assimp/postprocess.h"     // Post processing flags
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "Model.hpp"
 #include "Engine.hpp"
 #include "Skybox.hpp"
 #include "PrintGlm.hpp"

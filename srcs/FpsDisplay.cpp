@@ -5,6 +5,7 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtc/type_ptr.hpp"
 #include "cmath"
+
 FpsDisplay::FpsDisplay() : _nbFrame(0), _lastTime(0.0f), _fps(0.0f) {}
 
 FpsDisplay::~FpsDisplay() {}
