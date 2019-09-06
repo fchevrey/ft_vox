@@ -14,7 +14,7 @@ public:
     Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int texture); 
     virtual ~Chunk(void); 
 /*	public variables*/	
-    static const int CHUNK_SIZE = 16;
+    static const int CHUNK_SIZE = 32;
 /*	public functions*/	
     virtual void Draw() const;
     void CreateMesh();
@@ -43,6 +43,7 @@ private:
 	void _AddLeft(float x, float y, float z, float halfBlock);
 	void _AddRight(float x, float y, float z, float halfBlock);
 	float _GetTexture(glm::vec3 normal, eBlockType type);
+	bool	_CheckBlock(float x, float y, float z);
 	bool	_isLoad;
 	bool	_hasMesh;
 	bool	_isSetUp;

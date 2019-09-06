@@ -91,6 +91,25 @@ bool	Chunk::IsSetUp() const { return _isSetUp; }
 
 bool	Chunk::IsEmpty() const { return _isEmpty; }
 
+bool	Chunk::_CheckBlock(float x, float y, float z)
+{
+	if (y >= 0)
+	{
+		if (abs(World::instance->_out.GetNoise(x, z) * 200) < y)
+			return false;
+		else
+			return true;
+	}
+	else if (y < -1)
+	{
+		if (World::instance->_in.GetNoise(x, y, z) > 0)
+			return false;
+		else
+			return true;
+	}
+	else
+		return true;
+}
 void	Chunk::CreateMesh()
 {
 	bool lDefault = false;
@@ -103,143 +122,43 @@ void	Chunk::CreateMesh()
 				if (!_blocks[x][y][z].IsActive())
 					continue;
 
+				glm::vec3 worldPos = glm::vec3(x, y, z) + transform.position;
+
 				bool lXNegative = lDefault;
 				if (x > 0)
 					lXNegative = _blocks[x - 1][y][z].IsActive();
 				else
-				{
-					if (y + transform.position.y >= 0)
-					{
-						if (abs(World::instance->_out.GetNoise(x - 1 + transform.position.x, z + transform.position.z) * 200) < y + transform.position.y)
-							lXNegative = false;
-						else
-							lXNegative = true;
-					}
-					else if (y + transform.position.y < -1)
-					{
-						if (World::instance->_in.GetNoise(x - 1 + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
-							lXNegative = false;
-						else
-							lXNegative = true;
-					}
-					else
-						lXNegative = true;
-				}
+					lXNegative = _CheckBlock(worldPos.x - 1, worldPos.y, worldPos.z);
 
 				bool lXPositive = lDefault;
 				if (x < CHUNK_SIZE - 1)
 					lXPositive = _blocks[x + 1][y][z].IsActive();
 				else
-				{
-					if (y + transform.position.y >= 0)
-					{
-						if (abs(World::instance->_out.GetNoise(x + 1 + transform.position.x, z + transform.position.z) * 200) < y + transform.position.y)
-							lXPositive = false;
-						else
-							lXPositive = true;
-					}
-					else if (y + transform.position.y < -1)
-					{
-						if (World::instance->_in.GetNoise(x + 1 + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
-							lXPositive = false;
-						else
-							lXPositive = true;
-					}
-					else
-						lXPositive = true;
-				}
+					lXPositive = _CheckBlock(worldPos.x + 1, worldPos.y, worldPos.z);
 
 				bool lYNegative = lDefault;
 				if (y > 0)
 					lYNegative = _blocks[x][y - 1][z].IsActive();
 				else
-				{
-					if (y - 1 + transform.position.y >= 0)
-					{
-						if (abs(World::instance->_out.GetNoise(x + transform.position.x, z + transform.position.z) * 200) < y - 1 + transform.position.y)
-							lYNegative = false;
-						else
-							lYNegative = true;
-					}
-					else if (y - 1 + transform.position.y < -1)
-					{
-						if (World::instance->_in.GetNoise(x + transform.position.x, y - 1 + transform.position.y, z + transform.position.z) > 0)
-							lYNegative = false;
-						else
-							lYNegative = true;
-					}
-					else
-						lYNegative = true;
-				}
+					lYNegative = _CheckBlock(worldPos.x, worldPos.y - 1, worldPos.z);
 
 				bool lYPositive = lDefault;
 				if (y < CHUNK_SIZE - 1)
 					lYPositive = _blocks[x][y + 1][z].IsActive();
 				else
-				{
-					if (y + 1 + transform.position.y >= 0)
-					{
-						if (abs(World::instance->_out.GetNoise(x + transform.position.x, z + transform.position.z) * 200) < y + 1 + transform.position.y)
-							lYPositive = false;
-						else
-							lYPositive = true;
-					}
-					else if (y + 1 + transform.position.y < -1)
-					{
-						if (World::instance->_in.GetNoise(x + transform.position.x, y + 1 + transform.position.y, z + transform.position.z) > 0)
-							lYPositive = false;
-						else
-							lYPositive = true;
-					}
-					else
-						lYPositive = true;
-				}
+					lYPositive = _CheckBlock(worldPos.x, worldPos.y + 1, worldPos.z);
 
 				bool lZNegative = lDefault;
 				if (z > 0)
 					lZNegative = _blocks[x][y][z - 1].IsActive();
 				else
-				{
-					if (y + transform.position.y >= 0)
-					{
-						if (abs(World::instance->_out.GetNoise(x + transform.position.x, z - 1 + transform.position.z) * 200) < y + transform.position.y)
-							lZNegative = false;
-						else
-							lZNegative = true;
-					}
-					else if (y + transform.position.y < -1)
-					{
-						if (World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z - 1 + transform.position.z) > 0)
-							lZNegative = false;
-						else
-							lZNegative = true;
-					}
-					else
-						lZNegative = true;
-				}
+					lZNegative = _CheckBlock(worldPos.x, worldPos.y, worldPos.z - 1);
 
 				bool lZPositive = lDefault;
 				if (z < CHUNK_SIZE - 1)
 					lZPositive = _blocks[x][y][z + 1].IsActive();
 				else
-				{
-					if (y + transform.position.y >= 0)
-					{
-						if (abs(World::instance->_out.GetNoise(x + transform.position.x, z + 1 + transform.position.z) * 200) < y + transform.position.y)
-							lZPositive = false;
-						else
-							lZPositive = true;
-					}
-					else if (y + transform.position.y < -1)
-					{
-						if (World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z + 1 + transform.position.z) > 0)
-							lZPositive = false;
-						else
-							lZPositive = true;
-					}
-					else
-						lZPositive = true;
-				}
+					lZPositive = _CheckBlock(worldPos.x, worldPos.y, worldPos.z + 1);
 
 				_CreateCube(lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive, x, y, z);
 			}

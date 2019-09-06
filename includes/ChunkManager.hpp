@@ -6,7 +6,7 @@
 /*   By: jules <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/29 15:21:31 by jules             #+#    #+#             */
-/*   Updated: 2019/09/06 11:50:15 by jloro            ###   ########.fr       */
+/*   Updated: 2019/09/06 13:29:04 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ class ChunkManager : public Engine42::IGameObject
 		virtual void	FixedUpdate(void);
 
 		void Draw();
-		static const int	RENDER_SIZE = 10;
-		static const int	ASYNC_NUM_CHUNKS_PER_FRAME = 8;
+		static const int	RENDER_SIZE = 8;
+		static const int	ASYNC_NUM_CHUNKS_PER_FRAME = 3;
 	private:
 		std::list<std::shared_ptr<Chunk>>	_chunkList;
 		unsigned int						_text;
