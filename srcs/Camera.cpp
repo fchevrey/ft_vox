@@ -6,7 +6,7 @@
 /*   By: jloro <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/18 16:50:38 by jloro             #+#    #+#             */
-/*   Updated: 2019/09/03 14:47:18 by jules            ###   ########.fr       */
+/*   Updated: 2019/09/06 14:33:12 by jloro            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Camera::Camera(float width, float height) : _moveSpeed(MOVE_SPEED), _mouseSensit
 {
 	if (Camera::instance == nullptr)
 		instance = this;
-	_pos = glm::vec3(0.0f, 0.0f, 8.0f);
+	_pos = glm::vec3(11.0f, 57.0f, 31.0f);
 	_dir = glm::vec3(0.0f, 0.0f, -1.0f);
 	_CalcMatrix();
 }
