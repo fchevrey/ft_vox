@@ -38,12 +38,6 @@ float		Camera::GetYRotation(void) const { return _pitch; }
 
 void 	Camera::Update()
 {
-	//const SDL_Event	&event = Engine42::Engine::GetEvent();
-	
-	/* if (event.type == SDL_MOUSEMOTION)
-		LookAround(event.motion.xrel, -event.motion.yrel);*/
-	//else //if (event.type == SDL_KEYDOWN)
-	//{
 		const Uint8 	*keys = Engine42::Engine::GetKeyInput();
 		if (keys[SDL_SCANCODE_W])
 			Move(eCameraDirection::Forward, Engine42::Time::GetDeltaTime());
@@ -57,14 +51,10 @@ void 	Camera::Update()
 			Move(eCameraDirection::Down, Engine42::Time::GetDeltaTime());
 		if (keys[SDL_SCANCODE_SPACE])
 			Move(eCameraDirection::Up, Engine42::Time::GetDeltaTime());
-		if (keys[SDL_SCANCODE_R])
-			Engine42::Engine::ReloadShaders();
 		if (keys[SDL_SCANCODE_LSHIFT])
 			_sprint = true;
 		else
 			_sprint = false;
-
-	//}
 }
 void	Camera::FixedUpdate() {}
 
