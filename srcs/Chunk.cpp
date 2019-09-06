@@ -21,6 +21,7 @@ Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int t
 }
 void	Chunk::SetUpChunk()
 {
+	int i = 0;
 	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
 		for (int z = 0; z < CHUNK_SIZE; z++)
@@ -46,11 +47,13 @@ void	Chunk::SetUpChunk()
 				else if (y + transform.position.y < -1 && World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
 					_blocks[x][y][z].SetActive(false);
 
-				if (_blocks[x][y][z].IsActive())
-					_isEmpty = false;
+				if (!_blocks[x][y][z].IsActive())
+					i++;
 			}
 		}
 	}
+	if (i == CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+		_isEmpty = true;
 	_isSetUp = true;
 }
 
@@ -105,8 +108,20 @@ void	Chunk::CreateMesh()
 					lXNegative = _blocks[x - 1][y][z].IsActive();
 				else
 				{
-					if (y + transform.position.y >= 0 && abs(World::instance->_out.GetNoise(x - 1 + transform.position.x, z + transform.position.z) * 200) < y + transform.position.y)
-						lXNegative = false;
+					if (y + transform.position.y >= 0)
+					{
+						if (abs(World::instance->_out.GetNoise(x - 1 + transform.position.x, z + transform.position.z) * 200) < y + transform.position.y)
+							lXNegative = false;
+						else
+							lXNegative = true;
+					}
+					else if (y + transform.position.y < -1)
+					{
+						if (World::instance->_in.GetNoise(x - 1 + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
+							lXNegative = false;
+						else
+							lXNegative = true;
+					}
 					else
 						lXNegative = true;
 				}
@@ -116,34 +131,122 @@ void	Chunk::CreateMesh()
 					lXPositive = _blocks[x + 1][y][z].IsActive();
 				else
 				{
-					if (y + transform.position.y >= 0 && abs(World::instance->_out.GetNoise(x + 1 + transform.position.x, z + transform.position.z) * 200) < y + transform.position.y)
-						lXNegative = false;
+					if (y + transform.position.y >= 0)
+					{
+						if (abs(World::instance->_out.GetNoise(x + 1 + transform.position.x, z + transform.position.z) * 200) < y + transform.position.y)
+							lXPositive = false;
+						else
+							lXPositive = true;
+					}
+					else if (y + transform.position.y < -1)
+					{
+						if (World::instance->_in.GetNoise(x + 1 + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
+							lXPositive = false;
+						else
+							lXPositive = true;
+					}
 					else
-						lXNegative = true;
+						lXPositive = true;
 				}
 
 				bool lYNegative = lDefault;
 				if (y > 0)
 					lYNegative = _blocks[x][y - 1][z].IsActive();
+				else
+				{
+					if (y - 1 + transform.position.y >= 0)
+					{
+						if (abs(World::instance->_out.GetNoise(x + transform.position.x, z + transform.position.z) * 200) < y - 1 + transform.position.y)
+							lYNegative = false;
+						else
+							lYNegative = true;
+					}
+					else if (y - 1 + transform.position.y < -1)
+					{
+						if (World::instance->_in.GetNoise(x + transform.position.x, y - 1 + transform.position.y, z + transform.position.z) > 0)
+							lYNegative = false;
+						else
+							lYNegative = true;
+					}
+					else
+						lYNegative = true;
+				}
 
 				bool lYPositive = lDefault;
 				if (y < CHUNK_SIZE - 1)
 					lYPositive = _blocks[x][y + 1][z].IsActive();
+				else
+				{
+					if (y + 1 + transform.position.y >= 0)
+					{
+						if (abs(World::instance->_out.GetNoise(x + transform.position.x, z + transform.position.z) * 200) < y + 1 + transform.position.y)
+							lYPositive = false;
+						else
+							lYPositive = true;
+					}
+					else if (y + 1 + transform.position.y < -1)
+					{
+						if (World::instance->_in.GetNoise(x + transform.position.x, y + 1 + transform.position.y, z + transform.position.z) > 0)
+							lYPositive = false;
+						else
+							lYPositive = true;
+					}
+					else
+						lYPositive = true;
+				}
 
 				bool lZNegative = lDefault;
 				if (z > 0)
 					lZNegative = _blocks[x][y][z - 1].IsActive();
+				else
+				{
+					if (y + transform.position.y >= 0)
+					{
+						if (abs(World::instance->_out.GetNoise(x + transform.position.x, z - 1 + transform.position.z) * 200) < y + transform.position.y)
+							lZNegative = false;
+						else
+							lZNegative = true;
+					}
+					else if (y + transform.position.y < -1)
+					{
+						if (World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z - 1 + transform.position.z) > 0)
+							lZNegative = false;
+						else
+							lZNegative = true;
+					}
+					else
+						lZNegative = true;
+				}
 
 				bool lZPositive = lDefault;
 				if (z < CHUNK_SIZE - 1)
 					lZPositive = _blocks[x][y][z + 1].IsActive();
+				else
+				{
+					if (y + transform.position.y >= 0)
+					{
+						if (abs(World::instance->_out.GetNoise(x + transform.position.x, z + 1 + transform.position.z) * 200) < y + transform.position.y)
+							lZPositive = false;
+						else
+							lZPositive = true;
+					}
+					else if (y + transform.position.y < -1)
+					{
+						if (World::instance->_in.GetNoise(x + transform.position.x, y + transform.position.y, z + 1 + transform.position.z) > 0)
+							lZPositive = false;
+						else
+							lZPositive = true;
+					}
+					else
+						lZPositive = true;
+				}
 
 				_CreateCube(lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive, x, y, z);
 			}
 		}
 	}
 	_hasMesh = true;
-	if (!_isEmpty)
+	//if (!_isEmpty)
 		_SendToOpenGL();
 }
 
@@ -311,8 +414,9 @@ void	Chunk::_SendToOpenGL()
 
 void	Chunk::Draw() const
 {
-	if (!_isEmpty)
-	{
+	std::cout << "is empty: " << _isEmpty << std::endl;
+	//if (!_isEmpty)
+//	{
 		glCullFace(GL_BACK);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
@@ -328,5 +432,5 @@ void	Chunk::Draw() const
 		glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 9.0f);
 		glBindVertexArray(0);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
+//	}
 }
