@@ -27,15 +27,6 @@ void            Engine42::Engine::AddRenderer(std::shared_ptr<Renderer> renderer
 		_inst._renderers.push_back(renderers);
 }
 
-void            Engine42::Engine::AddFramebuffer(std::shared_ptr<Framebuffer> fbo) 
-{
-	if (fbo != nullptr)
-	{
-		_inst._framebuffers.push_back(fbo);
-		_inst._renderers.push_back(fbo);
-	}
-}
-
 void            Engine42::Engine::AddGameObject(std::shared_ptr<Engine42::IGameObject> object)
 {
 	if (object != nullptr)
@@ -63,15 +54,6 @@ void            Engine42::Engine::AddGameObject(std::list<std::shared_ptr<Engine
 
 const SDL_Event &Engine42::Engine::GetEvent(){ return _inst._event;}
 const Uint8 *Engine42::Engine::GetKeyInput(){ return _inst._keys;}
-
-void            Engine42::Engine::AddPostProcessShader(std::shared_ptr<Shader> postProcessShader)
-{
-	if (_inst._shaderFbo == nullptr)
-	{
-		createFBO();
-	}
-	_inst._shaderFbo = postProcessShader;
-}
 
 void            Engine42::Engine::ResizeWindow(int width, int height)
 {
@@ -192,38 +174,14 @@ std::shared_ptr<Text>				Engine42::Engine::GetFontUI() { return _inst._fontUI; }
 
 void                         Engine42::Engine::_RenderAll(void)
 {
-	if (_shaderFbo != nullptr)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
-	}
 	glEnable(GL_DEPTH_TEST);
 	_renderers.sort(_sort);
-    for (auto it = _framebuffers.begin(); it != _framebuffers.end(); it++)
-         (*it)->genTexture();
-	if (_shaderFbo != nullptr)
-		glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
-	else
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
     for (auto it = _renderers.begin(); it != _renderers.end(); it++)
          (*it)->Draw();
     if (_skybox != nullptr)
         _skybox->Draw();
     for (auto it = _UI.begin(); it != _UI.end(); it++)
          (*it)->Update();
-	if (_shaderFbo != nullptr)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_CULL_FACE);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		_shaderFbo->use();
-		_shaderFbo->setInt("screenTexture", 2);
-		glBindVertexArray(_quadVao);
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, _colorBuffer);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
 	_win->Swap();
 }
 void                          Engine42::Engine::_UpdateAll(void)
@@ -234,14 +192,6 @@ void                          Engine42::Engine::_UpdateAll(void)
 	{
 		(*it)->Update();
 	}
-}
-void                       Engine42::Engine::ReloadShaders(void)
-{
-    std::for_each(_inst._renderers.begin(), _inst._renderers.end(), [] (std::shared_ptr<Renderer> x) -> void { 
-        std::shared_ptr<Shader> shader = x->GetShader(); 
-        if (shader)
-            shader->Reload();
-        });
 }
 void                       Engine42::Engine::_FixedUpdateAll(void) 
 {

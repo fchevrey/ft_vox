@@ -9,8 +9,8 @@
 # include "Time.hpp"
 # include "Skybox.hpp"
 # include "Renderer.hpp"
-# include "Framebuffer.hpp"
-# include "PostProcess.hpp"
+//# include "Framebuffer.hpp"
+//# include "PostProcess.hpp"
 # include <memory>
 # include "Text.hpp"
 
@@ -27,7 +27,6 @@ namespace Engine42
 			/*	public functions	*/
 			static void            AddRenderer(std::list<std::shared_ptr<Renderer>> renderer);
 			static void            AddRenderer(std::shared_ptr<Renderer> meshrenderer);
-			static void            AddFramebuffer(std::shared_ptr<Framebuffer>  fbo);
 			static void            SetWindow(const SdlWindow *win);
 			static void            AddGameObject(std::shared_ptr<Engine42::IGameObject> object);
 			static void            AddGameObject(std::list<std::shared_ptr<Engine42::IGameObject>> objects);
@@ -40,7 +39,6 @@ namespace Engine42
 			static const Uint8     *GetKeyInput();
 			static bool             Destroy(std::shared_ptr<Renderer> renderer);
 			static std::shared_ptr<Text> GetFontUI();
-			static void             ReloadShaders(void);
 			void             ResizeWindow(int width, int height);
 
 			static void	createFBO();
@@ -56,7 +54,6 @@ namespace Engine42
 			/*	private variables	*/
 			static Engine                       _inst;
 			std::list<std::shared_ptr<Renderer>>           _renderers;
-			std::list<std::shared_ptr<Framebuffer>>				_framebuffers;
 			std::list<std::shared_ptr<Engine42::IGameObject>>   _gameObjs;
 			std::list<std::shared_ptr<Engine42::IGameObject>>   _UI;
 			std::shared_ptr<Text>					_fontUI;

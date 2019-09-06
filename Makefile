@@ -24,13 +24,13 @@ ORANGE = [038;2;239;138;5
 SRCS_DIR = srcs
 
 SRCS =  Time.cpp SdlWindow.cpp main.cpp Mesh.cpp Model.cpp Shader.cpp Camera.cpp \
-		Engine.cpp MeshRenderer.cpp Terrain.cpp Transform.cpp Skybox.cpp \
-		PrintGlm.cpp Framebuffer.cpp PostProcess.cpp Block.cpp Text.cpp \
+		Engine.cpp  Transform.cpp Skybox.cpp \
+		PrintGlm.cpp  Block.cpp Text.cpp \
 		FpsDisplay.cpp Chunk.cpp Renderer.cpp ChunkManager.cpp World.cpp \
 
 HEADER = SdlWindow.hpp Texture.hpp Vertex.hpp Shader.hpp Mesh.hpp Time.hpp \
-		IGameObject.hpp Engine.hpp Transform.hpp MeshRenderer.hpp Skybox.hpp \
-		Terrain.hpp PrintGlm.hpp Framebuffer.hpp PostProcess.hpp Block.hpp \
+		IGameObject.hpp Engine.hpp Transform.hpp Skybox.hpp \
+		 PrintGlm.hpp  Block.hpp \
 		Text.hpp FpsDisplay.hpp Chunk.hpp Renderer.hpp ChunkManager.hpp \
 		World.hpp
 
