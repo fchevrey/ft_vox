@@ -1,5 +1,6 @@
 #include "ChunkManager.hpp"
 #include "stb_image.h"
+#include <algorithm>
 
 ChunkManager::ChunkManager(std::shared_ptr<Shader> shader) : Renderer(shader)
 {
@@ -26,7 +27,7 @@ ChunkManager::ChunkManager(std::shared_ptr<Shader> shader) : Renderer(shader)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	float	halfRenderSize = RENDER_SIZE / 2.0f;
+	float	halfRenderSize = RENDER_SIZE /2.0f;
 	for (int i = -halfRenderSize; i < halfRenderSize; i++)
 	{
 		for (int j = -halfRenderSize; j < halfRenderSize; j++)
@@ -43,9 +44,15 @@ ChunkManager::ChunkManager(std::shared_ptr<Shader> shader) : Renderer(shader)
 
 ChunkManager::~ChunkManager() {}
 
+bool		sortChunk(const std::shared_ptr<Chunk> &first, const std::shared_ptr<Chunk> &sec)
+{
+	glm::vec3 camPos = Camera::instance->GetPos();
+	return glm::distance(sec->transform.position, camPos) > glm::distance(first->transform.position, camPos);
+}
+
 void	ChunkManager::Draw() const
 {
-	for (auto it = _chunkList.begin(); it != _chunkList.end(); it++)
+	for (auto it = _chunkToDraw.begin(); it != _chunkToDraw.end(); it++)
 		(*it)->Draw();
 }
 
@@ -60,14 +67,25 @@ void ChunkManager::_CheckUnload(float & coord, float & dif, std::shared_ptr<Chun
 void ChunkManager::Update()
 {
 	int chunkUpdated = 0;
-	for (auto it = _chunkList.begin(); it != _chunkList.end(); it++)
+	glm::vec3 camPos = Camera::instance->GetPos();
+	_chunkList.sort(sortChunk);
+	_chunkToDraw.clear();
+	const int maxX = Chunk::CHUNK_SIZE * (RENDER_SIZE/ 2);
+//	const int minX = Chunk::CHUNK_SIZE * (RENDER_SIZE / 2);
+	const int maxY = Chunk::CHUNK_SIZE * (RENDER_SIZE / 2);
+	const int maxZ = Chunk::CHUNK_SIZE * (RENDER_SIZE / 2);
+	//const int minZ = Chunk::CHUNK_SIZE * (RENDER_SIZE / 2);
+	//const float maxI = (RENDER_SIZE * RENDER_SIZE  * RENDER_SIZE );
+	//int i = 0;
+	auto end = _chunkList.end();
+	for (auto it = _chunkList.begin(); /*i < maxI && */it != end; it++)
 	{
-		glm::vec3 dif = Camera::instance->GetPos() - (*it)->transform.position;
-		if (abs(dif.z) > Chunk::CHUNK_SIZE * (RENDER_SIZE / 2))
+		glm::vec3 dif = camPos - (*it)->transform.position;
+		if (abs(dif.z) > maxZ)
 			_CheckUnload((*it)->transform.position.z, dif.z, *it);
-		if (abs(dif.y) > Chunk::CHUNK_SIZE * (RENDER_SIZE / 2))
+		if (abs(dif.y) > maxY)
 			_CheckUnload((*it)->transform.position.y, dif.y, *it);
-		if (abs(dif.x) > Chunk::CHUNK_SIZE * (RENDER_SIZE / 2))
+		if (abs(dif.x) > maxX)
 			_CheckUnload((*it)->transform.position.x, dif.x, *it);
 		if (!(*it)->IsLoad() && chunkUpdated < ASYNC_NUM_CHUNKS_PER_FRAME)
 		{
@@ -76,6 +94,8 @@ void ChunkManager::Update()
 			(*it)->CreateMesh();
 			chunkUpdated++;
 		}
+		_chunkToDraw.push_back(*it);
+	//	i++;
 	}
 }
 
