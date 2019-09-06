@@ -11,7 +11,7 @@ Chunk::Chunk(void) : Renderer()
     return;
 }
     
-Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int texture) : Renderer(shader, transform), _text(texture), _isLoad(false), _hasMesh(false), _isSetUp(false)
+Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int texture) : Renderer(shader, transform), _text(texture), _isLoad(false), _hasMesh(false), _isSetUp(false), _isEmpty(false)
 {
 	glGenBuffers(1, &_vbo);
 	glGenVertexArrays(1, &_vao);
@@ -21,6 +21,7 @@ Chunk::Chunk(std::shared_ptr<Shader> shader, Transform transform, unsigned int t
 }
 void	Chunk::SetUpChunk()
 {
+	int i = 0;
 	for (int x = 0; x < CHUNK_SIZE; x++)
 	{
 		for (int z = 0; z < CHUNK_SIZE; z++)
@@ -32,22 +33,27 @@ void	Chunk::SetUpChunk()
 				test = 0;
 			for (int y = 0; y < CHUNK_SIZE; y++)
 			{
-				if (y + transform.position.y >= 0 && test < y + transform.position.y)
-					_blocks[x][y][z].SetActive(false);
-				else if (y + transform.position.y < -1 && World::in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
-					_blocks[x][y][z].SetActive(false);
-				else if (y + transform.position.y >= 0)
+				if (y + transform.position.y >= 0)
 				{
-					if (y + transform.position.y > 70)
+					if (test < y + transform.position.y)
+						_blocks[x][y][z].SetActive(false);
+					else if (y + transform.position.y > 70)
 						_blocks[x][y][z].SetType(Snow);
-					if (y + transform.position.y > 10 && y + transform.position.y < 15)
+					else if (y + transform.position.y > 10 && y + transform.position.y < 15)
 						_blocks[x][y][z].SetType(Sand);
-					if (y + transform.position.y <= 10 && y + transform.position.y >= 0)
+					else if (y + transform.position.y <= 10 && y + transform.position.y >= 0)
 						_blocks[x][y][z].SetType(Water);
 				}
+				else if (y + transform.position.y < -1 && World::in.GetNoise(x + transform.position.x, y + transform.position.y, z + transform.position.z) > 0)
+					_blocks[x][y][z].SetActive(false);
+
+				if (!_blocks[x][y][z].IsActive())
+					i++;
 			}
 		}
 	}
+	if (i == CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE)
+		_isEmpty = true;
 	_isSetUp = true;
 }
 
@@ -59,12 +65,16 @@ void	Chunk::Unload()
 		for (int y = 0; y < CHUNK_SIZE; y++)
 		{
 			for (int z = 0; z < CHUNK_SIZE; z++)
+			{
 				_blocks[x][y][z].SetActive(true);
+				_blocks[x][y][z].SetType(Grass);
+			}
 		}
 	}
 	_isLoad = false;
 	_hasMesh = false;
 	_isSetUp = false;
+	_isEmpty = false;
 }
 Chunk::~Chunk()
 {
@@ -79,6 +89,27 @@ bool	Chunk::HasMesh() const { return _hasMesh; }
 
 bool	Chunk::IsSetUp() const { return _isSetUp; }
 
+bool	Chunk::IsEmpty() const { return _isEmpty; }
+
+bool	Chunk::_CheckBlock(float x, float y, float z)
+{
+	if (y >= 0)
+	{
+		if (abs(World::out.GetNoise(x, z) * 200) < y)
+			return false;
+		else
+			return true;
+	}
+	else if (y < -1)
+	{
+		if (World::in.GetNoise(x, y, z) > 0)
+			return false;
+		else
+			return true;
+	}
+	else
+		return true;
+}
 void	Chunk::CreateMesh()
 {
 	bool lDefault = false;
@@ -91,29 +122,43 @@ void	Chunk::CreateMesh()
 				if (!_blocks[x][y][z].IsActive())
 					continue;
 
+				glm::vec3 worldPos = glm::vec3(x, y, z) + transform.position;
+
 				bool lXNegative = lDefault;
 				if (x > 0)
 					lXNegative = _blocks[x - 1][y][z].IsActive();
+				else
+					lXNegative = _CheckBlock(worldPos.x - 1, worldPos.y, worldPos.z);
 
 				bool lXPositive = lDefault;
 				if (x < CHUNK_SIZE - 1)
 					lXPositive = _blocks[x + 1][y][z].IsActive();
+				else
+					lXPositive = _CheckBlock(worldPos.x + 1, worldPos.y, worldPos.z);
 
 				bool lYNegative = lDefault;
 				if (y > 0)
 					lYNegative = _blocks[x][y - 1][z].IsActive();
+				else
+					lYNegative = _CheckBlock(worldPos.x, worldPos.y - 1, worldPos.z);
 
 				bool lYPositive = lDefault;
 				if (y < CHUNK_SIZE - 1)
 					lYPositive = _blocks[x][y + 1][z].IsActive();
+				else
+					lYPositive = _CheckBlock(worldPos.x, worldPos.y + 1, worldPos.z);
 
 				bool lZNegative = lDefault;
 				if (z > 0)
 					lZNegative = _blocks[x][y][z - 1].IsActive();
+				else
+					lZNegative = _CheckBlock(worldPos.x, worldPos.y, worldPos.z - 1);
 
 				bool lZPositive = lDefault;
 				if (z < CHUNK_SIZE - 1)
 					lZPositive = _blocks[x][y][z + 1].IsActive();
+				else
+					lZPositive = _CheckBlock(worldPos.x, worldPos.y, worldPos.z + 1);
 
 				_CreateCube(lXNegative, lXPositive, lYNegative, lYPositive, lZNegative, lZPositive, x, y, z);
 			}
@@ -287,7 +332,7 @@ void	Chunk::_SendToOpenGL()
 
 void	Chunk::Draw() const
 {
-	glCullFace(GL_BACK);
+	//glCullFace(GL_BACK);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
