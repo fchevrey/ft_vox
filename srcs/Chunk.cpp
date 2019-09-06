@@ -246,8 +246,7 @@ void	Chunk::CreateMesh()
 		}
 	}
 	_hasMesh = true;
-	//if (!_isEmpty)
-		_SendToOpenGL();
+	_SendToOpenGL();
 }
 
 float	Chunk::_GetTexture(glm::vec3 normal, eBlockType type)
@@ -414,23 +413,19 @@ void	Chunk::_SendToOpenGL()
 
 void	Chunk::Draw() const
 {
-	std::cout << "is empty: " << _isEmpty << std::endl;
-	//if (!_isEmpty)
-//	{
-		glCullFace(GL_BACK);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		_shader->use();
-		_shader->setMat4("view", Camera::instance->GetMatView());
-		_shader->setMat4("projection", Camera::instance->GetMatProj());
-		_shader->setMat4("model", _modelMatrix);
-		_shader->setVec3("uCamPos", Camera::instance->GetPos());
-		_shader->setInt("text", 0);
+	glCullFace(GL_BACK);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, _text);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	_shader->use();
+	_shader->setMat4("view", Camera::instance->GetMatView());
+	_shader->setMat4("projection", Camera::instance->GetMatProj());
+	_shader->setMat4("model", _modelMatrix);
+	_shader->setVec3("uCamPos", Camera::instance->GetPos());
+	_shader->setInt("text", 0);
 
-		glBindVertexArray(_vao);
-		glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 9.0f);
-		glBindVertexArray(0);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//	}
+	glBindVertexArray(_vao);
+	glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 9.0f);
+	glBindVertexArray(0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

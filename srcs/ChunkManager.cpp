@@ -46,7 +46,10 @@ ChunkManager::~ChunkManager() {}
 void	ChunkManager::Draw()
 {
 	for (auto it = _chunkList.begin(); it != _chunkList.end(); it++)
-		(*it)->Draw();
+	{
+		if ((*it)->IsLoad() && !(*it)->IsEmpty())
+			(*it)->Draw();
+	}
 }
 
 void ChunkManager::_CheckUnload(float & coord, float & dif, std::shared_ptr<Chunk> chunk)
