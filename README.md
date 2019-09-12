@@ -1,12 +1,9 @@
 # ft_vox
 42 infographie project :  a modest Voxel engine
 
-Screenshots taken on this mac
-
-<img src="/screenshots/mac%20config.png" width="300">
-
 Rendering are made using openGl 4.1
 
+demo video : https://youtu.be/aeqFis4HrRs
 
 We used `FastNoise c++ library` for noise. Exteriors are made using 2d perlin noise, caves are generating using Simplex 3d noise.
 
@@ -38,6 +35,9 @@ ESC : Quit
 
 ## screenshots width a render view of 10 x 10 x 10 chunks :
 
+Screenshots taken on this mac
+
+<img src="/screenshots/mac%20config.png" width="300">
 
 ### Exteriors :
 <img src="/screenshots/320%20blocks%20at%2011.07.12%20AM.png" width="700">
