@@ -39,19 +39,19 @@ ESC : Quit
 
 
 ### Caves : 
-<img src="/screenshots/320 blocks at 11.08.01 AM width="700">
-<img src="/screenshots/320 blocks cave" width="700">
+<img src="/screenshots/320%20blocks%20at%2011.08.01%20AM.png" width="700">
+<img src="/screenshots/320%20blocks%20cave.png" width="700">
 
 Within walls, full chunk aren't draw : 
                                                               
-<img src="/ressources/screenshots/320 blocks at 11.10.00 AM" width="700">
+<img src="/ressources/screenshots/320%20blocks%20at%2011.10.00%20AM.png" width="700">
 
 
 
 ## screenshots width a render view of 8 x 8 x 8 chunks :
-<img src="/screenshots/240 blocks" width="700">
-<img src="/screenshots/240 blocks cave" width="700">
-<img src="/screenshots/240 blocks cave 2" width="700">
+<img src="/screenshots/240%20blocks.png" width="700">
+<img src="/screenshots/240%20blocks%20cave.png" width="700">
+<img src="/screenshots/240%20blocks%20cave%202.png" width="700">
 
 
 ## Built With
