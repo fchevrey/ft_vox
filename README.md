@@ -17,7 +17,10 @@ To ensure framerate chunk mesh are generated asynchronously.
 chunk are 32 x 32 x 32 blocks
 
 ## Usage
-clone the project, make, and run `./ft_vox` you can add a number for argument, to change the world `./ft_vox 12578` for instance. 
+clone the project, make, and run `./ft_vox` you can add a number for argument, to change the world.
+
+`./ft_vox 12578` for instance. 
+
 the number send will alway generate the same world.
 
 ## Commands
