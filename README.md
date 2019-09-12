@@ -4,7 +4,8 @@
 Screenshots taken on this mac
 
 <img src="/screenshots/mac%20config.png" width="300">
-Rendering are mde using openGl 4.1
+
+Rendering are made using openGl 4.1
 
 
 We used `FastNoise c++ library` for noise. Exteriors are made using 2d perlin noise, caves are generating using Simplex 3d noise.
@@ -15,6 +16,9 @@ To ensure framerate chunk mesh are generated asynchronously.
 
 chunk are 32 x 32 x 32 blocks
 
+## Usage
+clone the project, make, and run `./ft_vox` you can add a number for argument, to change the world `./ft_vox 12578` for instance. 
+the number send will alway generate the same world.
 
 ## Commands
 
