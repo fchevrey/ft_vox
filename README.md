@@ -3,7 +3,7 @@
 
 Screenshots taken on this mac
 
-<img src="/screenshots/mac config.png" width="300">
+<img src="/screenshots/mac%20config.png" width="300">
 Rendering are mde using openGl 4.1
 
 
@@ -33,15 +33,14 @@ ESC : Quit
 
 
 ### Exteriors :
-
-<img src="/ressources/screenshots/320 blocks at 11.07.12 AM" width="700">
-<img src="/ressources/screenshots/320 blocks at 11.07.25 AM" width="700">
-<img src="/ressources/screenshots/320 blocks at 11.07.39 AM" width="700">
+<img src="/screenshots/320%20blocks%20at%2011.07.12%20AM.png" width="700">
+<img src="/screenshots/320%20blocks%20at%2011.07.25%20AM.png" width="700">
+<img src="/screenshots/320%20blocks%20at%2011.07.39%20AM.png" width="700">
 
 
 ### Caves : 
-<img src="/ressources/screenshots/320 blocks at 11.08.01 AM width="700">
-<img src="/ressources/screenshots/320 blocks cave" width="700">
+<img src="/screenshots/320 blocks at 11.08.01 AM width="700">
+<img src="/screenshots/320 blocks cave" width="700">
 
 Within walls, full chunk aren't draw : 
                                                               
@@ -50,9 +49,9 @@ Within walls, full chunk aren't draw :
 
 
 ## screenshots width a render view of 8 x 8 x 8 chunks :
-<img src="/ressources/screenshots/240 blocks" width="700">
-<img src="/ressources/screenshots/240 blocks cave" width="700">
-<img src="/ressources/screenshots/240 blocks cave 2" width="700">
+<img src="/screenshots/240 blocks" width="700">
+<img src="/screenshots/240 blocks cave" width="700">
+<img src="/screenshots/240 blocks cave 2" width="700">
 
 
 ## Built With
