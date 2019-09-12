@@ -44,7 +44,7 @@ ESC : Quit
 
 Within walls, full chunk aren't draw : 
                                                               
-<img src="/ressources/screenshots/320%20blocks%20at%2011.10.00%20AM.png" width="700">
+<img src="/screenshots/320%20blocks%20at%2011.10.00%20AM.png" width="700">
 
 
 
